@@ -1,13 +1,16 @@
 import { useState } from 'react'
 
+import Intro from './components/Intro/Intro.jsx'
+import ModeSelect from './components/ModeSelect/ModeSelect.jsx'
+import SubjectGame from './components/Subject/SubjectGame.jsx'
+
 /**
  * Screen names:
  *  'intro'       — unskippable typewriter cinematic (first visit only)
  *  'modeSelect'  — choose Mode 1 or Mode 2
- *  'mode1'       — The Subject (Mode 1 game flow)
- *  'mode1Reveal' — Archetype reveal screen
- *  'mode2'       — The Observer (Mode 2 game flow)
- *  'mode2Rating' — Perception Rating screen
+ *  'mode1'       — The Subject (Mode 1 game flow, includes the reveal)
+ *  'mode2'       — The Observer (Mode 2 game flow, Person B's screen)
+ *  'mode2Rating' — Perception Rating screen (Person B's screen)
  */
 
 const STORAGE_KEY_INTRO = 'jane_intro_seen'
@@ -33,23 +36,13 @@ export default function App() {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       {screen === 'intro' && (
-        <PlaceholderScreen label="Intro" onNext={handleIntroComplete} />
+        <Intro onComplete={handleIntroComplete} />
       )}
       {screen === 'modeSelect' && (
-        <PlaceholderScreen
-          label="Mode Select"
-          actions={[
-            { label: 'Mode 1 — The Subject', next: 'mode1' },
-            { label: 'Mode 2 — The Observer', next: 'mode2' },
-          ]}
-          onNext={goTo}
-        />
+        <ModeSelect onSelectMode={(mode) => goTo(mode === 'mode1' ? 'mode1' : 'mode2')} />
       )}
       {screen === 'mode1' && (
-        <PlaceholderScreen label="Mode 1: The Subject" onNext={() => goTo('mode1Reveal')} />
-      )}
-      {screen === 'mode1Reveal' && (
-        <PlaceholderScreen label="Mode 1: Reveal" onNext={() => goTo('modeSelect')} />
+        <SubjectGame onReplay={() => goTo('modeSelect')} />
       )}
       {screen === 'mode2' && (
         <PlaceholderScreen label="Mode 2: The Observer" onNext={() => goTo('mode2Rating')} />
