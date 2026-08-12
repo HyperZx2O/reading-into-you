@@ -1,0 +1,218 @@
+.question {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  width: 100%;
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: var(--spacing-lg);
+}
+
+.progress {
+  font-family: var(--font-reveal);
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+.prompt {
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  line-height: 1.4;
+  text-align: center;
+}
+
+/* ── MultipleChoice ─────────────────────────────────────────── */
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.option {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-card);
+  color: var(--color-text);
+  text-align: left;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.option:hover:not(:disabled) {
+  border-color: var(--color-gold);
+  background: rgba(201, 168, 76, 0.06);
+}
+
+.option:disabled {
+  cursor: default;
+}
+
+.selected {
+  border-color: var(--color-gold);
+  background: rgba(201, 168, 76, 0.14);
+}
+
+/* ── ImagePick ──────────────────────────────────────────────── */
+
+.pickGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+}
+
+.card {
+  min-height: 7rem;
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-card);
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.card:hover:not(:disabled) {
+  border-color: var(--color-gold);
+  background: rgba(201, 168, 76, 0.06);
+}
+
+.card:disabled {
+  cursor: default;
+}
+
+/* ── WordInput ──────────────────────────────────────────────── */
+
+.wordForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.wordInput {
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-card);
+  color: var(--color-text);
+  font-family: var(--font-ui);
+  font-size: 1rem;
+}
+
+.wordInput:focus {
+  outline: none;
+  border-color: var(--color-gold);
+}
+
+.error {
+  font-family: var(--font-reveal);
+  font-size: 0.9rem;
+  color: var(--color-red);
+  text-align: center;
+}
+
+/* ── DragRank ───────────────────────────────────────────────── */
+
+.rankList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  list-style: none;
+}
+
+.rankItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-card);
+  cursor: grab;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.rankItem:active {
+  cursor: grabbing;
+}
+
+.rankPos {
+  font-family: var(--font-reveal);
+  color: var(--color-gold);
+  min-width: 1.5rem;
+  text-align: center;
+}
+
+.rankText {
+  flex: 1;
+}
+
+.rankControls {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rankButton {
+  /* ponytail: 44px minimum touch target per plan Phase 11 */
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-gold);
+  font-size: 0.9rem;
+  transition: background var(--transition-fast);
+}
+
+.rankButton:hover:not(:disabled) {
+  background: rgba(201, 168, 76, 0.12);
+}
+
+.rankButton:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.dragging {
+  opacity: 0.4;
+}
+
+.dragOver {
+  border-color: var(--color-gold);
+  background: rgba(201, 168, 76, 0.1);
+}
+
+/* ── Shared ─────────────────────────────────────────────────── */
+
+.primaryBtn {
+  align-self: center;
+  padding: 0.75rem 2.5rem;
+  border: 1px solid var(--color-gold);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-gold);
+  font-family: var(--font-reveal);
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  transition: background var(--transition-fast);
+}
+
+.primaryBtn:hover:not(:disabled) {
+  background: rgba(201, 168, 76, 0.12);
+}
+
+.primaryBtn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+@media (max-width: 480px) {
+  .pickGrid {
+    grid-template-columns: 1fr;
+  }
+}
