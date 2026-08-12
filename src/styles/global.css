@@ -1,0 +1,96 @@
+/* ─── Design Tokens ─────────────────────────────────────────── */
+:root {
+  --color-bg: #0f0f0f;
+  --color-text: #f0e6d3;
+  --color-gold: #c9a84c;
+  --color-red: #8b1a1a;
+  --color-card: #1a1a1a;
+  --color-annotation: #c9a84c;
+  --color-muted: #7a7060;
+  --color-border: rgba(201, 168, 76, 0.2);
+
+  --font-heading: 'Playfair Display', serif;
+  --font-reveal: 'Special Elite', monospace;
+  --font-ui: 'Inter', sans-serif;
+
+  --transition-fast: 200ms ease;
+  --transition-slow: 800ms ease;
+  --transition-dramatic: 1200ms ease;
+
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 4rem;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+}
+
+/* ─── Reset ─────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Typography ─────────────────────────────────────────────── */
+h1, h2, h3 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+h1 { font-size: clamp(2rem, 5vw, 3.5rem); }
+h2 { font-size: clamp(1.5rem, 3vw, 2.25rem); }
+h3 { font-size: clamp(1.1rem, 2vw, 1.5rem); }
+
+.reveal-text {
+  font-family: var(--font-reveal);
+}
+
+/* ─── Utilities ──────────────────────────────────────────────── */
+.gold { color: var(--color-gold); }
+.muted { color: var(--color-muted); }
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: var(--font-ui);
+  color: var(--color-text);
+}
+
+button:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
+
+/* ─── Reduced Motion ─────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ─── Mobile ─────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  :root {
+    --spacing-xl: 2rem;
+    --spacing-lg: 1.25rem;
+  }
+}
