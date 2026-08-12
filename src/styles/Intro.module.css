@@ -1,0 +1,52 @@
+.screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xl);
+  padding: var(--spacing-lg);
+  background: var(--color-bg);
+}
+
+.script {
+  max-width: 34rem;
+  font-family: var(--font-reveal);
+  font-size: clamp(1.05rem, 2.5vw, 1.35rem);
+  line-height: 1.9;
+  color: var(--color-gold);
+  text-align: center;
+  white-space: pre-wrap;
+}
+
+.caret {
+  display: inline-block;
+  width: 0.55em;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -0.15em;
+  background: var(--color-gold);
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.ready {
+  padding: 0.75rem 2.5rem;
+  border: 1px solid var(--color-gold);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-gold);
+  font-family: var(--font-reveal);
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  transition: background var(--transition-fast);
+}
+
+.ready:hover {
+  background: rgba(201, 168, 76, 0.12);
+}
