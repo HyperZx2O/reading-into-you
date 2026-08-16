@@ -18,12 +18,12 @@
  * Scoring rules:
  * - multipleChoice / imagePick: one value per option (0–3)
  * - dragRank: 4 values, one per option index. Entry [i] = points awarded if
- *   option i is ranked FIRST; useScoring scales linearly by actual rank
+ *   option i is ranked FIRST; scoring scales linearly by actual rank
  *   position (rank 1 = full value, rank 4 = 0). Implement by scanning each
  *   archetype's weighted entry (the max/non-zero value) and scaling by the
  *   rank position of that option — NOT by reading array index 0.
  * - wordInput: exactly 1 value per archetype (score for a keyword-matching
- *   response — keyword matching is handled by useScoring in Phase 5)
+ *   response — keyword matching is handled by scoring in Phase 5)
  */
 
 export const QUESTIONS = [
@@ -120,7 +120,7 @@ export const QUESTIONS = [
       pillar: [3, 0, 0, 0],
     },
   },
-  // q05 — wordInput (free text). Scored by keyword matching in useScoring;
+  // q05 — wordInput (free text). Scored by keyword matching in utils/scoring.js;
   // an archetype only scores when its keywords appear. Broad support (7/8
   // archetypes have a weight) keeps it a safe, non-punishing opener.
   {
@@ -129,6 +129,16 @@ export const QUESTIONS = [
     prompt: 'Name one thing you could not live without.',
     interactionType: 'wordInput',
     options: [],
+    keywords: {
+      sentinel: ['keys', 'security', 'safety', 'home', 'routine'],
+      architect: ['planner', 'plan', 'schedule', 'laptop', 'notebook', 'to-do'],
+      mask: [],
+      dreamer: ['music', 'book', 'imagination', 'dream', 'art'],
+      outlaw: ['freedom', 'independence', 'liberty', 'spontaneity'],
+      ghost: ['silence', 'privacy', 'solitude', 'quiet', 'peace'],
+      spark: ['people', 'friends', 'music', 'laughter', 'attention'],
+      pillar: ['family', 'faith', 'friends', 'love', 'health'],
+    },
     scoringMap: {
       sentinel: [2],
       architect: [2],
@@ -257,6 +267,16 @@ export const QUESTIONS = [
     prompt: 'Complete the sentence: "People trust me because I am ___"',
     interactionType: 'wordInput',
     options: [],
+    keywords: {
+      sentinel: ['reliable', 'loyal', 'steady', 'dependable', 'honest'],
+      architect: ['prepared', 'precise', 'logical', 'smart', 'organized'],
+      mask: ['charming', 'easygoing', 'fun', 'funny', 'likeable'],
+      dreamer: [],
+      outlaw: ['honest', 'real', 'direct', 'blunt'],
+      ghost: [],
+      spark: ['fun', 'funny', 'outgoing', 'lively', 'warm'],
+      pillar: ['honest', 'reliable', 'kind', 'consistent', 'true'],
+    },
     scoringMap: {
       sentinel: [2],
       architect: [2],
@@ -427,6 +447,16 @@ export const QUESTIONS = [
     prompt: 'One word: what your childhood bedroom made you feel.',
     interactionType: 'wordInput',
     options: [],
+    keywords: {
+      sentinel: ['safe', 'secure', 'warm', 'protected'],
+      architect: [],
+      mask: ['hidden', 'private', 'mine'],
+      dreamer: ['free', 'imaginative', 'magical', 'endless', 'wonder'],
+      outlaw: ['trapped', 'caged', 'bored', 'small'],
+      ghost: ['alone', 'quiet', 'still', 'empty'],
+      spark: [],
+      pillar: ['loved', 'warm', 'safe'],
+    },
     scoringMap: {
       sentinel: [2],
       architect: [0],
@@ -443,6 +473,7 @@ export const QUESTIONS = [
     act: 3,
     prompt: 'You notice a hairline crack in a wall everyone else walks past. You…',
     interactionType: 'multipleChoice',
+    misdirection: true,
     options: [
       'Note it. Someone should fix it. Maybe me.',
       'Study it — how long until it fails?',
@@ -557,6 +588,16 @@ export const QUESTIONS = [
     prompt: 'One word: the last thing you check before you fall asleep.',
     interactionType: 'wordInput',
     options: [],
+    keywords: {
+      sentinel: ['door', 'lock', 'alarm', 'windows'],
+      architect: ['plan', 'tomorrow', 'schedule', 'list', 'alarm'],
+      mask: ['phone', 'message', 'notification', 'social'],
+      dreamer: ['nothing', 'music', 'thought'],
+      outlaw: ['window', 'nothing', 'escape'],
+      ghost: [],
+      spark: ['phone', 'message', 'notification'],
+      pillar: ['prayer', 'family', 'nothing'],
+    },
     scoringMap: {
       sentinel: [3],
       architect: [2],

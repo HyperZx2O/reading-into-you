@@ -6,21 +6,117 @@
   max-width: 40rem;
   margin: 0 auto;
   padding: var(--spacing-lg);
+  animation: questionIn 300ms ease both;
 }
 
-.progress {
+@keyframes questionIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Case header (act label + progress rail + question index) ─── */
+
+.caseHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.actLabel {
   font-family: var(--font-reveal);
-  font-size: 0.85rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  text-align: center;
+  /* Replays on act change (keyed remount in QuestionRenderer). */
+  animation: actIn 400ms ease both;
+}
+
+/* Act II is pressure — the act label borrows the alarm (red is only for
+ * pressure and error; the timer is its companion on this screen). */
+.actLabelPressure {
+  color: var(--color-red);
+}
+
+@keyframes actIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.questionIndex {
+  font-family: var(--font-reveal);
+  font-size: 0.75rem;
   letter-spacing: 0.12em;
   color: var(--color-muted);
   text-align: center;
 }
 
+.progressRail {
+  width: 100%;
+  max-width: 22rem;
+  height: 2px;
+  background: color-mix(in srgb, var(--color-gold) 15%, transparent);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--color-gold);
+  /* scaleX (origin left) keeps the fill on the compositor, same visual. */
+  transition: transform var(--transition-slow);
+}
+
+.timer {
+  width: 100%;
+  height: 4px;
+  background: color-mix(in srgb, var(--color-red) 25%, transparent);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.timerFill {
+  height: 100%;
+  background: var(--color-red);
+}
+
+/* The last five seconds press harder — the countdown breathes.
+ * (Jane's pressure is a held breath, not a siren.) */
+.timerUrgent {
+  animation: timerPulse 1s ease-in-out infinite;
+}
+
+@keyframes timerPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
 .prompt {
   font-family: var(--font-heading);
   font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 700;
   line-height: 1.4;
   text-align: center;
+  overflow-wrap: break-word;
 }
 
 /* ── MultipleChoice ─────────────────────────────────────────── */
@@ -32,6 +128,9 @@
 }
 
 .option {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
   padding: var(--spacing-md) var(--spacing-lg);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -43,7 +142,7 @@
 
 .option:hover:not(:disabled) {
   border-color: var(--color-gold);
-  background: rgba(201, 168, 76, 0.06);
+  background: color-mix(in srgb, var(--color-gold) 6%, transparent);
 }
 
 .option:disabled {
@@ -52,7 +151,7 @@
 
 .selected {
   border-color: var(--color-gold);
-  background: rgba(201, 168, 76, 0.14);
+  background: color-mix(in srgb, var(--color-gold) 14%, transparent);
 }
 
 /* ── ImagePick ──────────────────────────────────────────────── */
@@ -71,22 +170,51 @@
   background: var(--color-card);
   color: var(--color-text);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: var(--spacing-sm);
   text-align: center;
+  overflow-wrap: break-word;
   transition: border-color var(--transition-fast), background var(--transition-fast);
 }
 
 .card:hover:not(:disabled) {
   border-color: var(--color-gold);
-  background: rgba(201, 168, 76, 0.06);
+  background: color-mix(in srgb, var(--color-gold) 6%, transparent);
 }
 
 .card:disabled {
   cursor: default;
 }
 
+/* ── Exhibit numbering (everything is evidence) ───────────────── */
+
+.exhibitIndex {
+  font-family: var(--font-reveal);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: var(--color-gold);
+  min-width: 1.5rem;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+/* Long options wrap instead of blowing out the flex row. */
+.exhibitText {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
 /* ── WordInput ──────────────────────────────────────────────── */
+
+/* Shared interaction column: the prompt and its inputs breathe together
+ * (WordInput's form already used gap-md; PickOne and DragRank join it). */
+.interaction {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
 
 .wordForm {
   display: flex;
@@ -109,11 +237,29 @@
   border-color: var(--color-gold);
 }
 
+.wordInput:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
 .error {
   font-family: var(--font-reveal);
   font-size: 0.9rem;
   color: var(--color-red);
   text-align: center;
+  /* Jane breaks her silence — the line settles in rather than pops. */
+  animation: stateIn 200ms ease both;
+}
+
+@keyframes stateIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ── DragRank ───────────────────────────────────────────────── */
@@ -150,6 +296,8 @@
 
 .rankText {
   flex: 1;
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .rankControls {
@@ -170,7 +318,7 @@
 }
 
 .rankButton:hover:not(:disabled) {
-  background: rgba(201, 168, 76, 0.12);
+  background: color-mix(in srgb, var(--color-gold) 12%, transparent);
 }
 
 .rankButton:disabled {
@@ -184,7 +332,7 @@
 
 .dragOver {
   border-color: var(--color-gold);
-  background: rgba(201, 168, 76, 0.1);
+  background: color-mix(in srgb, var(--color-gold) 10%, transparent);
 }
 
 /* ── Shared ─────────────────────────────────────────────────── */
@@ -203,7 +351,7 @@
 }
 
 .primaryBtn:hover:not(:disabled) {
-  background: rgba(201, 168, 76, 0.12);
+  background: color-mix(in srgb, var(--color-gold) 12%, transparent);
 }
 
 .primaryBtn:disabled {
@@ -214,5 +362,44 @@
 @media (max-width: 480px) {
   .pickGrid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ── Short viewports (phone landscape) ──────────────────────── */
+/* Questions are interactive — a little scroll is acceptable — but the
+ * options should start in view. Touch targets stay >=44px (min-height
+ * replaces the padding that provided them). */
+@media (max-height: 500px) {
+  .question {
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+  }
+
+  .option {
+    min-height: 2.75rem;
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  .card {
+    min-height: 5.5rem;
+    padding: var(--spacing-sm);
+  }
+
+  .rankItem {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+}
+
+/* Touch: no sticky hover tint after a tap. */
+@media (hover: none) {
+  .option:hover:not(:disabled),
+  .card:hover:not(:disabled) {
+    background: transparent;
+    border-color: var(--color-border);
+  }
+
+  .primaryBtn:hover:not(:disabled),
+  .rankButton:hover:not(:disabled) {
+    background: transparent;
   }
 }
