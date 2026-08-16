@@ -1,4 +1,25 @@
+# ponytail: standard Vite ignores - the scaffold shipped without a .gitignore.
 node_modules
 dist
+dist-ssr
+
+# Vite dev server cache
 .vite
+
+# Local env overrides
 *.local
+
+# Env files (project needs none, but keep secrets out anyway)
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.idea
+.vscode
