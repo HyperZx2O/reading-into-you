@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import ObserverGame from './components/Observer/ObserverGame.jsx'
+import PerceptionRating from './components/Observer/PerceptionRating.jsx'
+import AudioToggle from './components/UI/AudioToggle.jsx'
 
 import Intro from './components/Intro/Intro.jsx'
 import ModeSelect from './components/ModeSelect/ModeSelect.jsx'
@@ -28,6 +31,9 @@ export default function App() {
 
   const goTo = (nextScreen) => setScreen(nextScreen)
 
+  // Final Mode 2 score, passed to the Perception Rating screen.
+  const [mode2Score, setMode2Score] = useState(0)
+
   const handleIntroComplete = () => {
     try { localStorage.setItem(STORAGE_KEY_INTRO, 'true') } catch {}
     goTo('modeSelect')
@@ -35,6 +41,8 @@ export default function App() {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* Single global ambient control — spec: mute toggle always visible. */}
+      <AudioToggle />
       {screen === 'intro' && (
         <Intro onComplete={handleIntroComplete} />
       )}
@@ -45,63 +53,18 @@ export default function App() {
         <SubjectGame onReplay={() => goTo('modeSelect')} />
       )}
       {screen === 'mode2' && (
-        <PlaceholderScreen label="Mode 2: The Observer" onNext={() => goTo('mode2Rating')} />
+        <ObserverGame
+          onComplete={(score) => {
+            setMode2Score(score)
+            goTo('mode2Rating')
+          }}
+        />
       )}
       {screen === 'mode2Rating' && (
-        <PlaceholderScreen label="Mode 2: Perception Rating" onNext={() => goTo('modeSelect')} />
+        <PerceptionRating score={mode2Score} onPlayAgain={() => goTo('modeSelect')} />
       )}
     </div>
   )
 }
 
-/**
- * Temporary placeholder — replace each screen with its real component.
- */
-function PlaceholderScreen({ label, onNext, actions }) {
-  return (
-    <div style={{
-      flex: 1,
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: '1.5rem',
-      padding: '2rem',
-      fontFamily: 'var(--font-heading)',
-    }}>
-      <h2 style={{ color: 'var(--color-gold)' }}>{label}</h2>
-      <p style={{ color: 'var(--color-muted)', fontFamily: 'var(--font-ui)' }}>
-        — placeholder screen —
-      </p>
-      {actions
-        ? actions.map(({ label: btnLabel, next }) => (
-            <button
-              key={next}
-              onClick={() => onNext(next)}
-              style={btnStyle}
-            >
-              {btnLabel}
-            </button>
-          ))
-        : (
-          <button onClick={onNext} style={btnStyle}>
-            Continue →
-          </button>
-        )
-      }
-    </div>
-  )
-}
 
-const btnStyle = {
-  padding: '0.75rem 2rem',
-  border: '1px solid var(--color-gold)',
-  background: 'transparent',
-  color: 'var(--color-gold)',
-  fontFamily: 'var(--font-ui)',
-  fontSize: '0.95rem',
-  letterSpacing: '0.05em',
-  cursor: 'pointer',
-  borderRadius: 'var(--radius-sm)',
-  transition: 'background var(--transition-fast)',
-}
