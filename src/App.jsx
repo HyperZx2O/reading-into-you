@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import ObserverGame from './components/Observer/ObserverGame.jsx'
+import PerceptionRating from './components/Observer/PerceptionRating.jsx'
+import AudioToggle from './components/UI/AudioToggle.jsx'
 
 /**
  * Screen names:
@@ -25,6 +28,9 @@ export default function App() {
 
   const goTo = (nextScreen) => setScreen(nextScreen)
 
+  // Final Mode 2 score, passed to the Perception Rating screen.
+  const [mode2Score, setMode2Score] = useState(0)
+
   const handleIntroComplete = () => {
     try { localStorage.setItem(STORAGE_KEY_INTRO, 'true') } catch {}
     goTo('modeSelect')
@@ -32,6 +38,8 @@ export default function App() {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* Single global ambient control — spec: mute toggle always visible. */}
+      <AudioToggle />
       {screen === 'intro' && (
         <PlaceholderScreen label="Intro" onNext={handleIntroComplete} />
       )}
@@ -52,10 +60,15 @@ export default function App() {
         <PlaceholderScreen label="Mode 1: Reveal" onNext={() => goTo('modeSelect')} />
       )}
       {screen === 'mode2' && (
-        <PlaceholderScreen label="Mode 2: The Observer" onNext={() => goTo('mode2Rating')} />
+        <ObserverGame
+          onComplete={(score) => {
+            setMode2Score(score)
+            goTo('mode2Rating')
+          }}
+        />
       )}
       {screen === 'mode2Rating' && (
-        <PlaceholderScreen label="Mode 2: Perception Rating" onNext={() => goTo('modeSelect')} />
+        <PerceptionRating score={mode2Score} onPlayAgain={() => goTo('modeSelect')} />
       )}
     </div>
   )
