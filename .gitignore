@@ -1,4 +1,4 @@
-# ponytail: standard Vite ignores - the scaffold shipped without a .gitignore.
+# Dependencies and build output
 node_modules
 dist
 dist-ssr
@@ -15,7 +15,20 @@ context/
 # Env files (project needs none, but keep secrets out anyway)
 .env
 .env.*
-!.env.example
+
+# Test coverage output
+coverage/
+
+# Generated recordings (hackathon demo, not source)
+demo/
+
+# Tool artifacts (agent/design-tool state, not project code)
+.impeccable/
+.mimocode/
+# Skill-generated planning and design docs (tracked only when the team wants them)
+fix.md
+PRODUCT.md
+DESIGN.md
 
 # Logs
 *.log
