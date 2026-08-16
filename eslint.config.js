@@ -1,23 +1,47 @@
-// ponytail: minimal flat config so `npm run lint` can run — no lint config was
-// committed in the scaffold. No new dependencies (plugins already in devDeps).
+/**
+ * ESLint flat config (ESLint 9)
+ *
+ * - @eslint/js recommended — core rules (no-undef, no-unused-vars, ...)
+ * - eslint-plugin-react recommended — JSX-aware rules
+ * - eslint-plugin-react-hooks recommended — rules-of-hooks, exhaustive-deps
+ * - jsx-runtime overrides — react-in-jsx-scope / jsx-uses-react off, because
+ *   Vite uses the automatic JSX runtime (React is never imported in scope)
+ * - react/prop-types off — plan Phase 13 allows inline JSDoc in place of PropTypes
+ */
+
 import js from '@eslint/js'
 import globals from 'globals'
 import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 
 export default [
-  { ignores: ['dist'] },
-  js.configs.recommended,
-  react.configs.flat.recommended,
-  reactHooks.configs['recommended-latest'],
   {
-    languageOptions: { globals: globals.browser },
-    settings: { react: { version: '18.3' } },
+    ignores: ['dist', 'node_modules'],
+  },
+  js.configs.recommended,
+  {
+    files: ['**/*.{js,jsx}'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: globals.browser,
+      parserOptions: {
+        ecmaFeatures: { jsx: true },
+      },
+    },
+    settings: {
+      react: { version: 'detect' },
+    },
+    plugins: {
+      react,
+      'react-hooks': reactHooks,
+    },
     rules: {
-      'react/react-in-jsx-scope': 'off', // new JSX transform
-      'react/prop-types': 'off', // this project is untyped JS by design
-      // Global allowEmptyCatch rather than scoping it to App.jsx (Person A's
-      // file) — the intentional `catch {}` guards there use it.
+      ...react.configs.flat.recommended.rules,
+      ...react.configs.flat['jsx-runtime'].rules,
+      ...reactHooks.configs.recommended.rules,
+      'react/prop-types': 'off',
+      // Intentional empty catches (e.g. localStorage unavailable) are allowed
       'no-empty': ['error', { allowEmptyCatch: true }],
     },
   },

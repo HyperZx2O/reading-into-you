@@ -6,6 +6,9 @@ dist-ssr
 # Vite dev server cache
 .vite
 
+# Project scratch
+context/
+
 # Local env overrides
 *.local
 
