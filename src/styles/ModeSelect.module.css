@@ -1,11 +1,22 @@
 .screen {
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: var(--spacing-xl);
   padding: var(--spacing-lg);
+  animation: screenIn 400ms ease both;
+}
+
+@keyframes screenIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .title {
@@ -16,17 +27,86 @@
 
 .modes {
   display: flex;
+  align-items: stretch;
   gap: var(--spacing-lg);
   width: 100%;
   max-width: 44rem;
 }
 
-.mode {
+/* A stack of sheets — the file beneath the file. Flat, border-defined. */
+.modeStack {
+  position: relative;
   flex: 1;
+}
+
+.sheet {
+  --offset: 8px;
+  --sheet-opacity: 0.3;
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-card);
+  opacity: var(--sheet-opacity);
+  transform: translate(var(--offset), var(--offset));
+  /* The stack is set down on the desk: sheets slide into their offsets. */
+  animation: sheetSettle 400ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.sheet:nth-child(2) {
+  --offset: 4px;
+  --sheet-opacity: 0.55;
+  animation-delay: 80ms;
+}
+
+@keyframes sheetSettle {
+  from {
+    opacity: 0;
+    transform: translate(
+      calc(var(--offset) + 20px),
+      calc(var(--offset) + 20px)
+    );
+  }
+  to {
+    opacity: var(--sheet-opacity);
+    transform: translate(var(--offset), var(--offset));
+  }
+}
+
+.mode {
+  position: relative;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
   gap: var(--spacing-md);
+  padding: var(--spacing-lg) var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-card);
+  /* The file settles on top after its sheets land. */
+  animation: fileSet 450ms cubic-bezier(0.16, 1, 0.3, 1) 160ms both;
+}
+
+@keyframes fileSet {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reference {
+  font-family: var(--font-reveal);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  text-align: center;
 }
 
 .tagline {
@@ -34,6 +114,20 @@
   font-size: 0.9rem;
   color: var(--color-muted);
   text-align: center;
+  overflow-wrap: break-word;
+}
+
+/* The file's estimated-time annotation — honest commitment, dossier style.
+ * opacity 0.85 keeps it subdued while clearing WCAG AA (≈4.8:1) for 12px text. */
+.duration {
+  font-family: var(--font-reveal);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  opacity: 0.85;
+  text-align: center;
+  overflow-wrap: break-word;
 }
 
 .modeButton {
@@ -45,11 +139,13 @@
   color: var(--color-text);
   font-family: var(--font-heading);
   font-size: clamp(1.3rem, 3vw, 1.8rem);
+  font-weight: 700;
+  overflow-wrap: break-word;
   transition: background var(--transition-fast), border-color var(--transition-fast);
 }
 
 .modeButton:hover {
-  background: rgba(201, 168, 76, 0.1);
+  background: color-mix(in srgb, var(--color-gold) 10%, transparent);
   border-color: var(--color-gold);
 }
 
@@ -58,7 +154,46 @@
     flex-direction: column;
   }
 
+  .modeStack {
+    flex: none;
+  }
+
   .modeButton {
     padding: var(--spacing-lg) var(--spacing-md);
+  }
+
+  .sheet:nth-child(1) {
+    --offset: 5px;
+  }
+
+  .sheet:nth-child(2) {
+    --offset: 3px;
+  }
+}
+
+/* ── Short viewports (phone landscape) ──────────────────────── */
+@media (max-height: 500px) {
+  .screen {
+    gap: var(--spacing-lg);
+    padding: var(--spacing-md);
+  }
+
+  .modes {
+    gap: var(--spacing-md);
+  }
+
+  .mode {
+    padding: var(--spacing-md);
+  }
+
+  .modeButton {
+    padding: var(--spacing-md);
+  }
+}
+
+/* Touch: no sticky hover tint after a tap. */
+@media (hover: none) {
+  .modeButton:hover {
+    background: transparent;
   }
 }
