@@ -2,6 +2,7 @@
 
 .shell {
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -16,38 +17,65 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
-  animation: fadeIn var(--transition-slow);
+  animation: fadeIn 500ms ease both;
+}
+
+/* The subject file's reference line — index left, classification right. */
+.referenceRow {
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+}
+
+.reference,
+.classification {
+  font-family: var(--font-reveal);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.reference {
+  color: var(--color-muted);
+}
+
+.classification {
+  color: var(--color-gold);
+  padding-left: 0.6rem;
+  border-left: 1px solid var(--color-border);
+  white-space: nowrap;
 }
 
 .dossierName {
   color: var(--color-gold);
+  font-size: clamp(1.5rem, 3vw, 2rem);
   text-align: center;
+}
+
+/* Rhythm: the subject's identity groups tight; the evidence and the action
+ * each get a full beat of separation. */
+.dossier .clueScene {
+  margin-top: var(--spacing-lg);
+}
+
+.dossier .beginButton {
+  margin-top: var(--spacing-lg);
 }
 
 .dossierNote {
   font-style: italic;
   color: var(--color-muted);
   text-align: center;
+  overflow-wrap: break-word;
 }
 
-/* Visually hidden but readable by assistive tech. */
-.srOnly {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-  border: 0;
-}
-
+/* Visually-hidden text uses the global .sr-only utility (global.css). */
 .reaction {
   font-family: var(--font-reveal);
   color: var(--color-muted);
   font-size: 0.95rem;
-  font-style: italic;
   text-align: center;
 }
 
@@ -83,12 +111,25 @@
 
 .clue {
   font-family: var(--font-reveal);
-  color: var(--color-annotation);
+  color: var(--color-gold);
   border-left: 2px solid var(--color-gold);
   padding-left: var(--spacing-md);
   font-size: 0.95rem;
   line-height: 1.7;
   overflow-wrap: break-word;
+  /* Jane walks you down the file — each note surfaces in turn (B2). */
+  animation: clueIn 400ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes clueIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ── Buttons ─────────────────────────────────────────────── */
@@ -115,6 +156,11 @@
   color: var(--color-bg);
 }
 
+/* The action closes the screen with its own beat of separation. */
+.playAgainButton {
+  margin-top: var(--spacing-lg);
+}
+
 /* ── Deduction question ──────────────────────────────────── */
 .question {
   width: 100%;
@@ -122,12 +168,16 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
-  animation: fadeIn var(--transition-slow);
+  animation: fadeIn 300ms ease both;
 }
 
 .questionPrompt {
   color: var(--color-text);
   text-align: center;
+  font-family: var(--font-heading);
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
+  line-height: 1.4;
+  overflow-wrap: break-word;
 }
 
 .options {
@@ -138,6 +188,9 @@
 
 .option {
   width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
   border: 1px solid var(--color-border);
   background: var(--color-card);
   color: var(--color-text);
@@ -146,7 +199,25 @@
   padding: var(--spacing-md) var(--spacing-lg);
   border-radius: var(--radius-sm);
   min-height: 48px;
+  text-align: left;
   transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+/* Everything is evidence — deduction options carry exhibit numbers. */
+.exhibitIndex {
+  font-family: var(--font-reveal);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: var(--color-gold);
+  min-width: 1.5rem;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+/* Long options wrap instead of blowing out the flex row. */
+.exhibitText {
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .option:hover:not(:disabled) {
@@ -172,7 +243,18 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
-  animation: fadeIn var(--transition-slow);
+  animation: slideRight 300ms ease both;
+}
+
+@keyframes slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .feedbackCorrect {
@@ -187,10 +269,21 @@
 
 .feedbackText {
   font-family: var(--font-reveal);
-  font-size: 1.05rem;
-  line-height: 1.7;
+  font-size: clamp(1.05rem, 2.5vw, 1.4rem);
+  line-height: 1.9;
   text-align: center;
   overflow-wrap: break-word;
+}
+
+/* The dictating typewriter's hammer inside the feedback verdict. */
+.feedbackCaret {
+  display: inline-block;
+  width: 0.55em;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -0.15em;
+  background: var(--color-gold);
+  animation: blink 1s step-end infinite;
 }
 
 .errorState {
@@ -200,13 +293,13 @@
   max-width: 480px;
 }
 
-/* ── ProgressBar ─────────────────────────────────────────── */
+/* ── Progress bar ─────────────────────────────────────────── */
 .progressBar {
   width: 100%;
   max-width: 640px;
   height: 4px;
   background: color-mix(in srgb, var(--color-gold) 15%, transparent);
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
   margin-bottom: var(--spacing-lg);
 }
@@ -214,12 +307,15 @@
 .progressFill {
   height: 100%;
   background: var(--color-gold);
-  transition: width var(--transition-slow);
+  /* scaleX (origin left) keeps the fill on the compositor, same visual. */
+  transition: transform var(--transition-slow);
 }
 
 /* ── Perception Rating ───────────────────────────────────── */
 .ratingScreen {
+  position: relative;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -229,6 +325,23 @@
   text-align: center;
 }
 
+/* The case-closed stamp, pressed onto the desk's corner. */
+.stamp {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--color-gold);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-reveal);
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  transform: rotate(-4deg);
+  opacity: 0.9;
+}
+
 .ratingScore {
   font-family: var(--font-heading);
   font-size: clamp(3rem, 10vw, 5.5rem);
@@ -236,20 +349,61 @@
   line-height: 1;
 }
 
+/* The lamp burns by tier — dimmer gold below the top of the ladder. */
+.scoreRookie {
+  color: var(--color-muted);
+}
+
+.scoreInvestigator {
+  color: color-mix(in srgb, var(--color-gold) 55%, var(--color-bg));
+}
+
+.scoreConsultant {
+  color: color-mix(in srgb, var(--color-gold) 80%, var(--color-bg));
+}
+
+/* The top of the ladder: the label earns the full lamp too. */
+.labelJane {
+  color: var(--color-gold);
+}
+
 .ratingLabel {
   font-family: var(--font-heading);
   color: var(--color-text);
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-size: clamp(1.2rem, 3vw, 1.6rem);
+  overflow-wrap: break-word;
+  /* Hidden until the score lands — then it stamps in (labelStamp). */
+  opacity: 0;
+}
+
+/* The tier verdict presses onto the page once the count settles. */
+.labelStamp {
+  animation: labelStamp 450ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes labelStamp {
+  from {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .ratingRemark {
   font-family: var(--font-reveal);
-  color: var(--color-annotation);
+  color: var(--color-gold);
   max-width: 560px;
   min-height: 3em;
-  line-height: 1.7;
+  font-size: clamp(1.05rem, 2.5vw, 1.4rem);
+  line-height: 1.9;
+  margin-top: var(--spacing-lg);
+  overflow-wrap: break-word;
 }
 
 .ratingCursor {
@@ -309,6 +463,17 @@
     max-width: 100%;
   }
 
+  .referenceRow {
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xs);
+  }
+
+  .classification {
+    border-left: none;
+    padding-left: 0;
+  }
+
   .option {
     font-size: 0.95rem;
     padding: var(--spacing-md);
@@ -317,5 +482,71 @@
   /* Keep content clear of the fixed audio toggle in the corner. */
   .shell {
     padding-bottom: calc(var(--spacing-lg) + 56px);
+  }
+}
+
+/* ── Short viewports (phone landscape) ──────────────────────── */
+@media (max-height: 500px) {
+  .shell {
+    padding: var(--spacing-md);
+    /* The audio toggle still floats in the corner. */
+    padding-bottom: calc(var(--spacing-lg) + 56px);
+  }
+
+  .dossier {
+    gap: var(--spacing-sm);
+  }
+
+  /* The identity, evidence, and action beats compress to md. */
+  .dossier .clueScene,
+  .dossier .beginButton {
+    margin-top: var(--spacing-md);
+  }
+
+  .clueScene {
+    padding: var(--spacing-md);
+  }
+
+  .clueList {
+    gap: var(--spacing-sm);
+  }
+
+  .question {
+    gap: var(--spacing-md);
+  }
+
+  .option {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  .feedbackPanel {
+    padding: var(--spacing-md);
+  }
+
+  .ratingScreen {
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+  }
+
+  .ratingRemark {
+    margin-top: var(--spacing-md);
+  }
+}
+
+/* Touch: no sticky hover tint after a tap. */
+@media (hover: none) {
+  .beginButton:hover,
+  .nextButton:hover,
+  .playAgainButton:hover {
+    background: transparent;
+    color: var(--color-gold);
+  }
+
+  .option:hover:not(:disabled) {
+    border-color: var(--color-border);
+  }
+
+  .audioToggle:hover {
+    border-color: var(--color-border);
   }
 }

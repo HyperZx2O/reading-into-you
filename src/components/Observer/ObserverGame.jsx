@@ -1,46 +1,13 @@
-import { Component, useState } from 'react'
+import { useState } from 'react'
 import { useSubjectPool } from '../../hooks/useSubjectPool.js'
 import { getPerceptionRating } from '../../utils/scoring.js'
+import { REACTIONS_GOOD, REACTIONS_ROUGH } from '../../data/flavor.js'
 import Dossier from './Dossier.jsx'
 import DeductionQuestion from './DeductionQuestion.jsx'
 import Feedback from './Feedback.jsx'
-import ProgressBar from '../UI/ProgressBar.jsx'
 import styles from '../../styles/Observer.module.css'
 
-/** Error boundary — never show a blank screen (Phase 9). */
-class GameErrorBoundary extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { hasError: false }
-  }
-
-  static getDerivedStateFromError() {
-    return { hasError: true }
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div className={styles.shell}>
-          <p className={styles.errorState}>
-            Something went wrong. Please refresh.
-          </p>
-        </div>
-      )
-    }
-    return this.props.children
-  }
-}
-
-const REACTIONS_GOOD = [
-  'Hmm. You are picking up what I am putting down.',
-  'Careful — an eye that sharp starts to look like cheating.',
-]
-
-const REACTIONS_ROUGH = [
-  'You are reading the words, not the person. Try the spaces between.',
-  'Still staring at the obvious. The obvious is where I hide things.',
-]
+// Render errors are caught app-wide by components/UI/ErrorBoundary.jsx (Phase 9).
 
 /**
  * Nice-to-have: Jane's dry mid-session comment at subjects 3 and 5,
@@ -74,7 +41,7 @@ function ObserverGameInner({ onComplete }) {
   )
 
   const finishSession = () =>
-    onComplete(getPerceptionRating(correctCount, totalQuestions).score)
+    onComplete(getPerceptionRating(correctCount, totalQuestions))
 
   const handleAnswer = (index) => {
     if (selectedIndex !== null) return
@@ -132,23 +99,44 @@ function ObserverGameInner({ onComplete }) {
     return (
       <div className={styles.shell}>
         <p className={styles.errorState}>
-          Not enough subjects to begin. Please refresh.
+          Not enough subjects to begin. Please reload.
         </p>
       </div>
     )
   }
 
   return (
-    <div className={styles.shell}>
+    <main className={styles.shell}>
+      <h1 className="sr-only">The Observer</h1>
       {phase === 'dossier' && (
-        <Dossier subject={subject} reaction={reaction} onBegin={beginDeduction} />
+        <Dossier
+          subject={subject}
+          index={subjectIndex}
+          total={subjects.length}
+          reaction={reaction}
+          onBegin={beginDeduction}
+        />
       )}
 
       {phase !== 'dossier' && (
-        <ProgressBar
-          current={questionIndex + 1}
-          total={subject.questions.length}
-        />
+        <div
+          className={styles.progressBar}
+          role="progressbar"
+          aria-valuenow={questionIndex + 1}
+          aria-valuemin={0}
+          aria-valuemax={subject.questions.length}
+          aria-label="Question progress"
+        >
+          <div
+            className={styles.progressFill}
+            style={{
+              transform: `scaleX(${
+                Math.round(((questionIndex + 1) / subject.questions.length) * 100) / 100
+              })`,
+              transformOrigin: 'left',
+            }}
+          />
+        </div>
       )}
 
       {phase === 'question' && question && (
@@ -166,14 +154,8 @@ function ObserverGameInner({ onComplete }) {
           onNext={handleNext}
         />
       )}
-    </div>
+    </main>
   )
 }
 
-export default function ObserverGame(props) {
-  return (
-    <GameErrorBoundary>
-      <ObserverGameInner {...props} />
-    </GameErrorBoundary>
-  )
-}
+export default ObserverGameInner

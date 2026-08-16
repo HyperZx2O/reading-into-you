@@ -5,7 +5,7 @@ const STORAGE_KEY = 'jane_mode2_scores'
 const MAX_ENTRIES = 3
 
 /** Last up-to-3 recorded scores, newest first. Never throws. */
-export function getScoreHistory() {
+function getScoreHistory() {
   try {
     const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]')
     if (!Array.isArray(parsed)) return []
