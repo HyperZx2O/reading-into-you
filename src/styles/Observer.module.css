@@ -79,6 +79,126 @@
   text-align: center;
 }
 
+/* ── My read (the casebook note, P2) ─────────────────────── */
+.noteForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-lg);
+}
+
+.noteLabel {
+  font-family: var(--font-reveal);
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.noteInput {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  background: var(--color-card);
+  color: var(--color-text);
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-sm);
+  min-height: 44px;
+  transition: border-color var(--transition-fast);
+}
+
+.noteInput::placeholder {
+  color: color-mix(in srgb, var(--color-muted) 55%, transparent);
+}
+
+.noteInput:focus {
+  outline: none;
+  border-color: var(--color-gold);
+}
+
+.noteInput:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+.noteInput:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* ── The casebook on the rating screen (P2) ──────────────── */
+.casebook {
+  width: 100%;
+  max-width: 640px;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+  text-align: left;
+}
+
+.casebookTitle {
+  font-family: var(--font-heading);
+  color: var(--color-gold);
+  font-size: 1.15rem;
+  text-align: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.casebookList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: 0;
+}
+
+.casebookName {
+  font-family: var(--font-reveal);
+  color: var(--color-gold);
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: var(--spacing-xs);
+}
+
+/* The player's read sits beside Jane's on wide rows; stacks on mobile. */
+.casebookPair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+}
+
+.casebookMine,
+.casebookHers {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  overflow-wrap: break-word;
+  margin: 0;
+}
+
+/* The player's own words — italic, gold, a lighter ink than Jane's. */
+.casebookMine {
+  font-style: italic;
+  color: var(--color-gold);
+}
+
+.casebookHers {
+  color: var(--color-muted);
+}
+
+.casebookTag {
+  display: block;
+  font-family: var(--font-reveal);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+  font-style: normal;
+}
+
 .scoreHistory {
   font-family: var(--font-reveal);
   color: var(--color-muted);
@@ -146,7 +266,14 @@
   padding: 0.75rem 2.5rem;
   border-radius: var(--radius-sm);
   min-height: 48px;
-  transition: background var(--transition-fast), color var(--transition-fast);
+  transition: background var(--transition-fast), color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.beginButton:active:not(:disabled),
+.nextButton:active:not(:disabled),
+.playAgainButton:active:not(:disabled) {
+  transform: scaleY(0.97);
 }
 
 .beginButton:hover,
@@ -200,7 +327,14 @@
   border-radius: var(--radius-sm);
   min-height: 48px;
   text-align: left;
-  transition: border-color var(--transition-fast), background var(--transition-fast);
+  transition: border-color var(--transition-fast), background var(--transition-fast),
+    transform var(--transition-fast);
+  animation: borderBreathe 4s ease-in-out infinite;
+}
+
+/* Pressing indents the paper. */
+.option:active:not(:disabled) {
+  transform: scaleY(0.97);
 }
 
 /* Everything is evidence — deduction options carry exhibit numbers. */
@@ -224,66 +358,178 @@
   border-color: var(--color-gold);
 }
 
+.option:focus-visible:not(:disabled) {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
 .optionSelected {
   border-color: var(--color-gold);
   background: color-mix(in srgb, var(--color-gold) 12%, transparent);
+  animation: commitPulse 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes commitPulse {
+  0% { border-width: 1px; }
+  40% { border-width: 2px; }
+  100% { border-width: 1px; }
 }
 
 .option:disabled {
   cursor: default;
 }
 
-/* ── Feedback ────────────────────────────────────────────── */
-.feedbackPanel {
+/* ── Batch reveal (Jane turns the page) ─────────────────── */
+.reveal {
+  --page-slide: 28px;
   width: 100%;
   max-width: 640px;
-  border: 1px solid;
-  border-radius: var(--radius-md);
-  padding: var(--spacing-lg);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-lg);
-  animation: slideRight 300ms ease both;
+  gap: var(--spacing-md);
+  animation: pageIn 400ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-@keyframes slideRight {
+/* The page turns over — the sheet slides in with a breath of rotation. */
+@keyframes pageIn {
   from {
     opacity: 0;
-    transform: translateX(24px);
+    transform: translateX(var(--page-slide)) rotate(0.4deg);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateX(0) rotate(0);
   }
 }
 
-.feedbackCorrect {
+.revealEyebrow {
+  font-family: var(--font-reveal);
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.revealHeading {
+  color: var(--color-gold);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  text-align: center;
+}
+
+/* The verdict count — announced once as the page opens. */
+.revealSummary {
+  font-family: var(--font-reveal);
+  color: var(--color-gold);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.revealList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: 0;
+}
+
+/* Rows sit in place and surface in turn as Jane confirms each deduction. */
+.revealRow {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 400ms ease, transform 400ms ease;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-card);
+  padding: var(--spacing-md) var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.revealRowActive {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Correct reads carry the gold stamp; wrong reads stay blank and quiet. */
+.revealRowCorrect {
   border-color: var(--color-gold);
   background: color-mix(in srgb, var(--color-gold) 6%, transparent);
 }
 
-.feedbackWrong {
-  border-color: var(--color-red);
-  background: color-mix(in srgb, var(--color-red) 8%, transparent);
+.revealRowBlank {
+  border-color: var(--color-border);
 }
 
-.feedbackText {
+.revealPrompt {
   font-family: var(--font-reveal);
-  font-size: clamp(1.05rem, 2.5vw, 1.4rem);
-  line-height: 1.9;
-  text-align: center;
+  color: var(--color-muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.revealChoice {
+  color: var(--color-text);
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-sm);
   overflow-wrap: break-word;
 }
 
-/* The dictating typewriter's hammer inside the feedback verdict. */
-.feedbackCaret {
-  display: inline-block;
-  width: 0.55em;
-  height: 1em;
-  margin-left: 2px;
-  vertical-align: -0.15em;
-  background: var(--color-gold);
-  animation: blink 1s step-end infinite;
+/* The gold seal pressed beside a confirmed read. */
+.revealStamp {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  border: 1px solid var(--color-gold);
+  border-radius: 50%;
+  color: var(--color-gold);
+  font-size: 0.75rem;
+  line-height: 1;
+  transform: translateY(1px);
+}
+
+/* When its row lands, the seal presses onto the page — ink, not a fade.
+ * The animation only exists on the active row, so each stamp presses as it
+ * is revealed rather than all at mount. */
+.revealRowActive .revealStamp {
+  transform-origin: center;
+  animation: stampPress 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes stampPress {
+  from {
+    transform: translateY(1px) scale(1.6) rotate(-8deg);
+  }
+  to {
+    transform: translateY(1px) scale(1) rotate(0);
+  }
+}
+
+/* Jane's remark types beneath the confirmed read. */
+.revealFeedback {
+  font-family: var(--font-reveal);
+  color: var(--color-gold);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-left: calc(1.3rem + var(--spacing-sm));
+  overflow-wrap: break-word;
+}
+
+/* The page's closing remark — Jane's verdict, not a correction. */
+.revealCaption {
+  font-family: var(--font-reveal);
+  color: var(--color-muted);
+  font-style: italic;
+  font-size: 0.95rem;
+  text-align: center;
 }
 
 .errorState {
@@ -297,7 +543,7 @@
 .progressBar {
   width: 100%;
   max-width: 640px;
-  height: 4px;
+  height: 6px;
   background: color-mix(in srgb, var(--color-gold) 15%, transparent);
   border-radius: var(--radius-sm);
   overflow: hidden;
@@ -365,6 +611,8 @@
 /* The top of the ladder: the label earns the full lamp too. */
 .labelJane {
   color: var(--color-gold);
+  text-shadow: 0 0 12px rgba(201, 168, 76, 0.35);
+  animation: goldPulse 3s ease-in-out infinite;
 }
 
 .ratingLabel {
@@ -429,17 +677,28 @@
   z-index: 100;
   min-width: 44px;
   min-height: 44px;
+  padding: 0 var(--spacing-md);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   background: var(--color-card);
   color: var(--color-gold);
   font-family: var(--font-reveal);
-  font-size: 1.1rem;
-  transition: border-color var(--transition-fast);
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  transition: border-color var(--transition-fast), transform var(--transition-fast);
 }
 
 .audioToggle:hover {
   border-color: var(--color-gold);
+}
+
+.audioToggle:active {
+  transform: scaleY(0.97);
+}
+
+.audioToggle:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
 }
 
 /* ── Motion ──────────────────────────────────────────────── */
@@ -458,7 +717,7 @@
 @media (max-width: 480px) {
   .dossier,
   .question,
-  .feedbackPanel,
+  .reveal,
   .progressBar {
     max-width: 100%;
   }
@@ -467,6 +726,11 @@
     flex-direction: column;
     align-items: center;
     gap: var(--spacing-xs);
+  }
+
+  .casebookPair {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
   }
 
   .classification {
@@ -519,8 +783,12 @@
     padding: var(--spacing-sm) var(--spacing-md);
   }
 
-  .feedbackPanel {
-    padding: var(--spacing-md);
+  .reveal {
+    gap: var(--spacing-sm);
+  }
+
+  .revealRow {
+    padding: var(--spacing-sm) var(--spacing-md);
   }
 
   .ratingScreen {
@@ -548,5 +816,13 @@
 
   .audioToggle:hover {
     border-color: var(--color-border);
+  }
+}
+
+/* Reduced motion: no gold pulse, no border breath */
+@media (prefers-reduced-motion: reduce) {
+  .labelJane,
+  .option {
+    animation: none;
   }
 }

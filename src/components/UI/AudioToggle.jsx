@@ -89,7 +89,9 @@ export default function AudioToggle() {
       title={soundOn ? 'Mute sound' : 'Unmute sound'}
       aria-pressed={soundOn}
     >
-      {soundOn ? '♪' : '✕♪'}
+      {/* Real visible text — a glyph-only button is invisible to axe's
+       * color-contrast check, and the state label reads clearly. */}
+      {soundOn ? '♪ Sound on' : '✕♪ Sound off'}
     </button>
   )
 }

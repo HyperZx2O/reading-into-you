@@ -10,7 +10,7 @@
 
   --font-heading: 'Playfair Display', serif;
   --font-reveal: 'Special Elite', monospace;
-  --font-ui: 'Inter', sans-serif;
+  --font-ui: 'DM Sans', sans-serif;
 
   --transition-fast: 200ms ease;
   --transition-slow: 800ms ease;
@@ -35,6 +35,7 @@
 
 html, body, #root {
   height: 100%;
+  overflow-x: clip;
 }
 
 body {
@@ -115,9 +116,33 @@ button {
   color: var(--color-text);
 }
 
-button:focus-visible {
+/* ─── Mode cursors (P4) ───────────────────────────────────────── */
+/* The player's instrument changes with the role: a pen to be read, a gloved
+ * hand to read others. Inline SVG data URIs — no asset files, and the `auto`
+ * fallback covers any browser that refuses custom cursors. Specificity beats
+ * the global `button { cursor: pointer }` above. */
+.mode1,
+.mode1 button {
+  cursor: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='16'%20height='16'%20viewBox='0%200%2016%2016'%3E%3Cpath%20d='M5%202%20L11%202%20L13%2013%20L3%2013%20Z'%20fill='%23f0e6d3'%20stroke='%23c9a84c'%20stroke-width='0.8'/%3E%3Cpath%20d='M7%208%20L9%208%20L8%2014%20Z'%20fill='%23c9a84c'/%3E%3C/svg%3E")
+      8 14,
+    auto;
+}
+
+.mode2,
+.mode2 button {
+  cursor: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='24'%20height='24'%20viewBox='0%200%2024%2024'%3E%3Cpath%20d='M7%203%20L7%2013%20C7%2013.5%205.5%2014.5%205.5%2017%20L5.5%2019.5%20C5.5%2020.5%206.5%2021.5%208%2021.5%20L16%2021.5%20C18%2021.5%2019%2020%2019%2017.5%20L19%2013%20C19%2011%2017.5%2010.8%2016.5%2011.6%20L16.5%209%20C16.5%208%2015.5%207%2014.5%207%20L14.5%205%20C14.5%204%2013.5%203%2012.5%203%20Z'%20fill='%23f0e6d3'%20stroke='%23c9a84c'%20stroke-width='1'/%3E%3C/svg%3E")
+      12 6,
+    auto;
+}
+
+button:focus-visible,
+option:focus-visible,
+[role="option"]:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
   outline: 2px solid var(--color-gold);
-  outline-offset: 3px;
+  outline-offset: 2px;
 }
 
 /* ─── Reduced Motion ─────────────────────────────────────────── */
@@ -132,6 +157,24 @@ button:focus-visible {
      * them run once and stop; one-shot reveals still hold their end state. */
     animation-iteration-count: 1 !important;
   }
+
+  /* Layer 2 — restore essential animations as opacity-only (no spatial movement).
+   * These carry information the user still needs: a typing cursor, a pressure
+   * signal, and progress feedback. */
+  .caret,
+  .reactionCaret,
+  .subtitleCaret,
+  .ratingCursor {
+    animation: blink 1.2s step-end infinite !important;
+  }
+
+  .timerUrgent {
+    animation: timerPulse 1.2s ease-in-out infinite !important;
+  }
+
+  .progressFill {
+    transition: transform 200ms ease !important;
+  }
 }
 
 /* ─── Mobile ─────────────────────────────────────────────────── */
@@ -139,5 +182,178 @@ button:focus-visible {
   :root {
     --spacing-xl: 2rem;
     --spacing-lg: 1.25rem;
+  }
+}
+
+/* ─── Atmospheric Vignette ──────────────────────────────────── */
+/* The lamp's limited light pool — the desk is lit, the edges fall to dark.
+ * Enhances the One Lamp Rule: the world has a center, not a wash. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background: radial-gradient(
+    ellipse 70% 65% at 50% 45%,
+    transparent 0%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.35) 100%
+  );
+}
+
+/* ─── Film Grain ────────────────────────────────────────────── */
+/* Subtle noise texture — the document has texture, not sterile digital flatness.
+ * SVG feTurbulence generates the grain; opacity keeps it whisper-quiet. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  filter: url(#grain);
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+}
+
+/* Reduced motion: keep overlays static */
+@media (prefers-reduced-motion: reduce) {
+  body::after,
+  body::before {
+    animation: none;
+  }
+}
+
+/* ─── Typewriter Jitter ─────────────────────────────────────── */
+/* Each character strikes the page with a slight irregularity —
+ * the machine is alive, not digital. Applied via utility class. */
+@keyframes typewriterJitter {
+  0%    { transform: translateY(0px); }
+  10%   { transform: translateY(-0.5px); }
+  20%   { transform: translateY(0.3px); }
+  30%   { transform: translateY(-0.2px); }
+  40%   { transform: translateY(0.4px); }
+  50%   { transform: translateY(-0.3px); }
+  60%   { transform: translateY(0.2px); }
+  70%   { transform: translateY(-0.4px); }
+  80%   { transform: translateY(0.1px); }
+  90%   { transform: translateY(-0.2px); }
+  100%  { transform: translateY(0px); }
+}
+
+.typewriter-jitter {
+  animation: typewriterJitter 0.15s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typewriter-jitter {
+    animation: none;
+  }
+}
+
+/* ─── Gold Glow Pulse ──────────────────────────────────────── */
+/* The gold accent breathes — alive, not static. Applied via utility class. */
+@keyframes goldPulse {
+  0%    { text-shadow: 0 0 8px rgba(201, 168, 76, 0.25); }
+  50%   { text-shadow: 0 0 12px rgba(201, 168, 76, 0.45); }
+  100%  { text-shadow: 0 0 8px rgba(201, 168, 76, 0.25); }
+}
+
+.gold-pulse {
+  animation: goldPulse 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gold-pulse {
+    animation: none;
+    text-shadow: 0 0 8px rgba(201, 168, 76, 0.35);
+  }
+}
+
+/* ─── Border Breath ────────────────────────────────────────── */
+/* Card borders breathe — alive, not static. Applied via utility class. */
+@keyframes borderBreathe {
+  0%    { border-color: rgba(201, 168, 76, 0.2); }
+  50%   { border-color: rgba(201, 168, 76, 0.35); }
+  100%  { border-color: rgba(201, 168, 76, 0.2); }
+}
+
+.border-breathe {
+  animation: borderBreathe 4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .border-breathe {
+    animation: none;
+  }
+}
+
+/* ─── Page Turn Transition ─────────────────────────────────── */
+/* The page turns when Jane moves forward — a subtle rotate + translate.
+ * Applied to screen containers for the "case file page turn" feel. */
+@keyframes pageTurn {
+  from {
+    opacity: 0;
+    transform: perspective(800px) rotateY(-2deg) translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(800px) rotateY(0deg) translateX(0);
+  }
+}
+
+.page-turn {
+  animation: pageTurn 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-turn {
+    animation: none;
+  }
+}
+
+/* ─── Cursor Effects ───────────────────────────────────────── */
+/* Diegetic cursors: pen in Mode 1, gloved hand in Mode 2.
+ * The tool matches the role — the player handles the case file. */
+.cursor-pen {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z' fill='%23c9a84c' stroke='%230f0f0f' stroke-width='1'/%3E%3Cpath d='M14.06 6.19l3.75 3.75' stroke='%230f0f0f' stroke-width='1'/%3E%3C/svg%3E") 3 21, auto;
+}
+
+.cursor-hand {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2z' fill='%23c9a84c' stroke='%230f0f0f' stroke-width='1'/%3E%3Ccircle cx='12' cy='15' r='2' fill='%230f0f0f'/%3E%3C/svg%3E") 12 12, auto;
+}
+
+/* Diegetic cursors: pen in Mode 1, gloved hand in Mode 2. */
+.mode1,
+.mode1 * {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z' fill='%23c9a84c' stroke='%230f0f0f' stroke-width='1'/%3E%3Cpath d='M14.06 6.19l3.75 3.75' stroke='%230f0f0f' stroke-width='1'/%3E%3C/svg%3E") 3 21, auto;
+}
+
+.mode2,
+.mode2 * {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2z' fill='%23c9a84c' stroke='%230f0f0f' stroke-width='1'/%3E%3Ccircle cx='12' cy='15' r='2' fill='%230f0f0f'/%3E%3C/svg%3E") 12 12, auto;
+}
+
+/* Buttons keep pointer cursor for affordance */
+.mode1 button,
+.mode2 button,
+.mode1 a,
+.mode2 a {
+  cursor: pointer;
+}
+
+/* Reduced motion: default cursor */
+@media (prefers-reduced-motion: reduce) {
+  .mode1,
+  .mode1 *,
+  .mode2,
+  .mode2 * {
+    cursor: auto;
+  }
+  .mode1 button,
+  .mode2 button,
+  .mode1 a,
+  .mode2 a {
+    cursor: pointer;
   }
 }
