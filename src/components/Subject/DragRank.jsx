@@ -60,6 +60,8 @@ export default function DragRank({ question, onAnswer }) {
             }`}
             draggable={!locked}
             onDragStart={() => {
+              // One drag at a time — a re-fired dragstart cannot stack the cue.
+              if (dragged !== null) return
               setDragged(position)
               playSfx('drag-start')
             }}

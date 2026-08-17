@@ -1,18 +1,22 @@
 import { useEffect, useRef, useState } from 'react'
 import useTypewriter from '../../hooks/useTypewriter.js'
 import { getRatingDetails, getRatingLabel } from '../../utils/scoring.js'
-import { recordScore } from '../../utils/scoreHistory.js'
+import { recordScore } from '../../utils/caseMemory.js'
+import { CASEBOOK_COPY, LAST_RUN_REMARKS } from '../../data/flavor.js'
 import { playSfx } from '../../audio/uiSfx.js'
 import styles from '../../styles/Observer.module.css'
 
 /**
- * Final Mode 2 screen. Receives the 0–100 score, derives label + remark
- * from the rating ladder, and types out Jane's closing remark.
+ * Final Mode 2 screen. Receives the 0–100 score plus the casebook (the
+ * player's optional "my read" notes beside Jane's behavioral notes, P2),
+ * derives label + remark from the rating ladder, and types out Jane's
+ * closing remark — followed, when a previous run exists, by a second line
+ * naming the last tier in one of three directions (P6).
  * Sound: the tier landing is a rank increase (`level-up`, played once when
- * the score count-up completes and the label stamps), Jane's remark types
+ * the score count-up completes and the label stamps), Jane's remarks type
  * with key-contact cues, and Play again navigates back.
  */
-export default function PerceptionRating({ score, onPlayAgain }) {
+export default function PerceptionRating({ score, subjects = [], reads = [], onPlayAgain }) {
   // Defensive clamp — score must be a finite 0–100 number (Phase 9).
   const safeScore = Number.isFinite(score)
     ? Math.max(0, Math.min(100, Math.round(score)))
@@ -23,7 +27,6 @@ export default function PerceptionRating({ score, onPlayAgain }) {
 
   const [displayScore, setDisplayScore] = useState(0)
   const [stamped, setStamped] = useState(false)
-
   // The score counts up 0 → safeScore (700ms, ease-out) so the lamp visibly
   // burns by tier as the number climbs; the tier label stamps in once it
   // lands. Reduced motion jumps straight to the final value.
@@ -77,6 +80,22 @@ export default function PerceptionRating({ score, onPlayAgain }) {
     setHistory(recordScore(safeScore))
   }, [safeScore])
 
+  // P6 — Jane remembers: once the tier remark finishes, a second typed line
+  // names the previous run's tier in one of three directions. `history[1]`
+  // is the previous run (recordScore prepends the current one).
+  const lastRunScore = history.length > 1 ? history[1] : null
+  const lastRunLine =
+    lastRunScore === null
+      ? ''
+      : LAST_RUN_REMARKS[
+          safeScore > lastRunScore ? 'up' : safeScore < lastRunScore ? 'down' : 'same'
+        ](getRatingLabel(lastRunScore))
+  const { displayedText: lastTyped, isDone: lastIsDone } = useTypewriter(
+    isDone ? lastRunLine : '',
+    30,
+    { sfx: true }
+  )
+
   const typing = !isDone
 
   return (
@@ -99,6 +118,47 @@ export default function PerceptionRating({ score, onPlayAgain }) {
         {typing && <span className={styles.ratingCursor} aria-hidden="true" />}
       </p>
       <span className="sr-only">{remark}</span>
+
+      {/* The memory of the last run, typed after the tier remark (P6). */}
+      {lastRunLine && (
+        <>
+          <p className={styles.ratingRemark} aria-hidden="true">
+            {lastTyped}
+            {!lastIsDone && <span className={styles.ratingCursor} aria-hidden="true" />}
+          </p>
+          <span className="sr-only">{lastRunLine}</span>
+        </>
+      )}
+
+      {/* The casebook — the player's reads, held beside Jane's (P2). Only
+       * renders when the player filed at least one note; skipped subjects
+       * still appear, Jane having read them whether the player did or not. */}
+      {reads.length > 0 && (
+        <section className={styles.casebook}>
+          <h2 className={styles.casebookTitle}>{CASEBOOK_COPY.sectionTitle}</h2>
+          <ol className={styles.casebookList}>
+            {subjects.map((subject) => {
+              const read = reads.find((r) => r.subjectId === subject.id)
+              return (
+                <li key={subject.id} className={styles.casebookRow}>
+                  <p className={styles.casebookName}>{subject.name}</p>
+                  <div className={styles.casebookPair}>
+                    <p className={styles.casebookMine}>
+                      <span className={styles.casebookTag}>{CASEBOOK_COPY.you}</span>
+                      {read?.note ?? CASEBOOK_COPY.skipped}
+                    </p>
+                    <p className={styles.casebookHers}>
+                      <span className={styles.casebookTag}>{CASEBOOK_COPY.jane}</span>
+                      {subject.behavioralNote}
+                    </p>
+                  </div>
+                </li>
+              )
+            })}
+          </ol>
+        </section>
+      )}
+
       {history.length > 1 && (
         <p className={styles.scoreHistory}>
           Previous runs: {history.slice(1).join(' · ')}
