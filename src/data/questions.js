@@ -7,11 +7,30 @@
  *   act: 1 | 2 | 3,           // 1=Calibration, 2=Pressure, 3=Misdirection
  *   prompt: string,
  *   interactionType: 'multipleChoice' | 'imagePick' | 'wordInput' | 'dragRank',
+ *   difficulty: 'easy' | 'medium' | 'hard',  // For adaptive difficulty
  *   options: string[],         // for multipleChoice / imagePick / dragRank
  *   scoringMap: {              // archetypeId → points awarded for each option index
  *     [archetypeId]: number[]
- *   }
+ *   },
+ *   revealQuote: {             // wordInput only — Jane quotes the answer back (P2)
+ *     before: string,          //   sentence up to the player's answer
+ *     after: string            //   sentence after it ("…That was the tell.")
+ *   },
+ *   themes: {                  // option index -> behavioral theme, for Jane's
+ *     [theme]: number[]        //   mid-session pattern reads (P3): security,
+ *   }                          //   freedom, people, solitude
+ *   prelude: string,           // Jane waits (P7) — her typed line plays before
+ *                              //   the options render. Never on Act 2, never
+ *                              //   stacked with faceDown.
+ *   faceDown: true,            // options start face-down behind a turn-over
+ *                              //   tap (P7). Option interactions only.
+ *   misdirection: true,        // Act 3 misdirection questions
  * }
+ *
+ * Difficulty levels:
+ * - easy: Clear options, straightforward choices, familiar scenarios
+ * - medium: Moderate ambiguity, requires some self-reflection
+ * - hard: High ambiguity, misdirection, abstract concepts, or complex scenarios
  *
  * Archetype IDs: sentinel, architect, mask, dreamer, outlaw, ghost, spark, pillar
  *
@@ -37,6 +56,7 @@ export const QUESTIONS = [
     act: 1,
     prompt: 'You walk into a room full of strangers. What do you notice first?',
     interactionType: 'multipleChoice',
+    difficulty: 'easy',
     options: [
       'The exits — and who is closest to them',
       'How people are arranged — who stands where',
@@ -53,12 +73,15 @@ export const QUESTIONS = [
       spark: [0, 0, 3, 0],
       pillar: [0, 0, 0, 0],
     },
+    themes: { security: [0], people: [2] },
   },
   {
     id: 'q02',
     act: 1,
     prompt: 'A free afternoon, entirely yours. How do you spend it?',
+    prelude: 'A free afternoon is a confession. I am watching.',
     interactionType: 'multipleChoice',
+    difficulty: 'easy',
     options: [
       'Plan something — and actually do it',
       'Call everyone I love and make plans',
@@ -75,12 +98,14 @@ export const QUESTIONS = [
       spark: [0, 3, 0, 0],
       pillar: [1, 0, 0, 0],
     },
+    themes: { people: [1], freedom: [2], solitude: [3] },
   },
   {
     id: 'q03',
     act: 1,
     prompt: 'Pick a view that draws you in.',
     interactionType: 'imagePick',
+    difficulty: 'easy',
     options: [
       'A wide, endless ocean',
       'A city from above — streets like circuits',
@@ -97,12 +122,14 @@ export const QUESTIONS = [
       spark: [0, 0, 3, 0],
       pillar: [0, 0, 0, 0],
     },
+    themes: { freedom: [0], people: [2], solitude: [3] },
   },
   {
     id: 'q04',
     act: 1,
     prompt: 'A friend asks for your advice on something you know nothing about. You…',
     interactionType: 'multipleChoice',
+    difficulty: 'medium',
     options: [
       'Say so, and help them think it through',
       'Give them the confidence they need to hear',
@@ -128,6 +155,7 @@ export const QUESTIONS = [
     act: 1,
     prompt: 'Name one thing you could not live without.',
     interactionType: 'wordInput',
+    difficulty: 'easy',
     options: [],
     keywords: {
       sentinel: ['keys', 'security', 'safety', 'home', 'routine'],
@@ -149,6 +177,11 @@ export const QUESTIONS = [
       spark: [2],
       pillar: [2],
     },
+    // The reveal quotes this answer back (P2).
+    revealQuote: {
+      before: 'You said you could not live without ',
+      after: '. That was the tell.',
+    },
   },
   // q06 — dragRank. Each archetype's single non-zero entry marks its signature
   // item; ranking that item first = full points, scaled linearly down to 0 at
@@ -158,6 +191,7 @@ export const QUESTIONS = [
     act: 1,
     prompt: 'Rank what a home must have, most to least important.',
     interactionType: 'dragRank',
+    difficulty: 'medium',
     options: ['Security', 'Freedom', 'Beauty', 'Order'],
     scoringMap: {
       sentinel: [3, 0, 0, 0],
@@ -169,12 +203,14 @@ export const QUESTIONS = [
       spark: [0, 0, 0, 0],
       pillar: [0, 0, 0, 0],
     },
+    themes: { security: [0], freedom: [1] },
   },
   {
     id: 'q07',
     act: 1,
     prompt: 'In a group photo, where are you?',
     interactionType: 'multipleChoice',
+    difficulty: 'easy',
     options: [
       'Front and center, arm around someone',
       'Off to the side, laughing',
@@ -191,12 +227,14 @@ export const QUESTIONS = [
       spark: [3, 1, 0, 0],
       pillar: [0, 0, 0, 2],
     },
+    themes: { people: [0], solitude: [2] },
   },
   {
     id: 'q08',
     act: 1,
     prompt: 'Pick a room you would want to live in.',
     interactionType: 'imagePick',
+    difficulty: 'medium',
     options: [
       'A study walled with books and one window',
       'A penthouse with glass walls, all light',
@@ -213,6 +251,7 @@ export const QUESTIONS = [
       spark: [0, 2, 0, 1],
       pillar: [0, 0, 0, 0],
     },
+    themes: { solitude: [0], security: [2], freedom: [3] },
   },
 
   // ── ACT 2: Pressure (8 questions) ───────────────────────────
@@ -222,6 +261,7 @@ export const QUESTIONS = [
     act: 2,
     prompt: 'You discover a close friend has done something that would ruin them if it came out. You…',
     interactionType: 'multipleChoice',
+    difficulty: 'hard',
     options: [
       'Tell them, face to face, no matter how hard',
       'Keep it to myself — it is their story to tell',
@@ -244,6 +284,7 @@ export const QUESTIONS = [
     act: 2,
     prompt: 'Your friend is an hour late to something you planned. You…',
     interactionType: 'multipleChoice',
+    difficulty: 'easy',
     options: [
       'Wait. People are worth it.',
       'Text them a joke and keep the night alive',
@@ -260,12 +301,14 @@ export const QUESTIONS = [
       spark: [0, 3, 0, 0],
       pillar: [3, 0, 0, 0],
     },
+    themes: { people: [0], freedom: [2] },
   },
   {
     id: 'q11',
     act: 2,
     prompt: 'Complete the sentence: "People trust me because I am ___"',
     interactionType: 'wordInput',
+    difficulty: 'medium',
     options: [],
     keywords: {
       sentinel: ['reliable', 'loyal', 'steady', 'dependable', 'honest'],
@@ -287,12 +330,18 @@ export const QUESTIONS = [
       spark: [2],
       pillar: [3],
     },
+    // The reveal quotes this answer back (P2).
+    revealQuote: {
+      before: 'People trust you because you are ',
+      after: '. You told me yourself.',
+    },
   },
   {
     id: 'q12',
     act: 2,
     prompt: 'A fire. Everyone is safe. You have time to grab four things. Rank what you take first.',
     interactionType: 'dragRank',
+    difficulty: 'hard',
     options: [
       'Your phone — contacts, photos, plans',
       'A box of keepsakes',
@@ -309,6 +358,7 @@ export const QUESTIONS = [
       spark: [0, 0, 0, 0],
       pillar: [0, 0, 3, 0],
     },
+    themes: { people: [0], security: [3] },
   },
   // q13 — Act 2 betrayal pressure. Withdraw = ghost (watch), plan the response
   // = architect (control), cut off = outlaw (autonomy — the sentinel's shadow),
@@ -318,6 +368,7 @@ export const QUESTIONS = [
     act: 2,
     prompt: 'Someone you trusted betrays you, publicly. Your first instinct…',
     interactionType: 'multipleChoice',
+    difficulty: 'hard',
     options: [
       'Withdraw. Say nothing. Watch.',
       'Plan the response — every move, every timing',
@@ -340,6 +391,7 @@ export const QUESTIONS = [
     act: 2,
     prompt: 'A crisis hits. Which object do you reach for?',
     interactionType: 'imagePick',
+    difficulty: 'medium',
     options: [
       'A flashlight — I need to see what is coming',
       'A notebook and pen — I need to think',
@@ -356,12 +408,14 @@ export const QUESTIONS = [
       spark: [0, 0, 3, 0],
       pillar: [0, 0, 1, 0],
     },
+    themes: { security: [0], people: [2], solitude: [3] },
   },
   {
     id: 'q15',
     act: 2,
     prompt: 'A stranger insults you in front of a crowd. You…',
     interactionType: 'multipleChoice',
+    difficulty: 'medium',
     options: [
       'Ignore it. Their words are not my weather.',
       'Say something sharp enough that they remember me',
@@ -384,6 +438,7 @@ export const QUESTIONS = [
     act: 2,
     prompt: 'Rank what you need most from a partner.',
     interactionType: 'dragRank',
+    difficulty: 'medium',
     options: ['Honesty', 'Excitement', 'Understanding', 'Stability'],
     scoringMap: {
       sentinel: [0, 0, 0, 3],
@@ -395,6 +450,7 @@ export const QUESTIONS = [
       spark: [0, 0, 0, 0],
       pillar: [3, 0, 0, 0],
     },
+    themes: { security: [3] },
   },
 
   // ── ACT 3: Misdirection (9 questions) ───────────────────────
@@ -407,6 +463,7 @@ export const QUESTIONS = [
     act: 3,
     prompt: 'You always order the same coffee. Which describes it?',
     interactionType: 'multipleChoice',
+    difficulty: 'easy',
     options: [
       'The same thing every time — I do not even look at the menu',
       'Whatever is new — I will try anything twice',
@@ -423,12 +480,14 @@ export const QUESTIONS = [
       spark: [0, 0, 0, 0],
       pillar: [1, 0, 0, 0],
     },
+    themes: { freedom: [1] },
   },
   {
     id: 'q18',
     act: 3,
     prompt: 'Pick a texture.',
     interactionType: 'imagePick',
+    difficulty: 'medium',
     options: ['Worn stone', 'Cool glass', 'Still water', 'Open flame'],
     scoringMap: {
       sentinel: [2, 0, 0, 0],
@@ -440,12 +499,14 @@ export const QUESTIONS = [
       spark: [0, 0, 0, 2],
       pillar: [3, 0, 0, 0],
     },
+    themes: { solitude: [2], freedom: [3] },
   },
   {
     id: 'q19',
     act: 3,
     prompt: 'One word: what your childhood bedroom made you feel.',
     interactionType: 'wordInput',
+    difficulty: 'hard',
     options: [],
     keywords: {
       sentinel: ['safe', 'secure', 'warm', 'protected'],
@@ -467,12 +528,19 @@ export const QUESTIONS = [
       spark: [0],
       pillar: [1],
     },
+    // The reveal quotes this answer back (P2).
+    revealQuote: {
+      before: 'Your childhood bedroom made you feel ',
+      after: '. You told me that.',
+    },
   },
   {
     id: 'q20',
     act: 3,
     prompt: 'You notice a hairline crack in a wall everyone else walks past. You…',
+    prelude: 'You noticed the crack before I pointed at it. Interesting.',
     interactionType: 'multipleChoice',
+    difficulty: 'hard',
     misdirection: true,
     options: [
       'Note it. Someone should fix it. Maybe me.',
@@ -496,6 +564,7 @@ export const QUESTIONS = [
     act: 3,
     prompt: 'You open the news app. Rank what you read first to last.',
     interactionType: 'dragRank',
+    difficulty: 'medium',
     options: [
       'Headlines — what is actually happening',
       'The puzzles',
@@ -512,12 +581,14 @@ export const QUESTIONS = [
       spark: [0, 0, 0, 0],
       pillar: [0, 0, 0, 0],
     },
+    themes: { people: [3] },
   },
   {
     id: 'q22',
     act: 3,
     prompt: 'At a party, the music cuts out. Dead silence. You…',
     interactionType: 'multipleChoice',
+    difficulty: 'medium',
     options: [
       'Say something funny — save the room',
       'Watch everyone\'s reactions — fascinating',
@@ -534,6 +605,7 @@ export const QUESTIONS = [
       spark: [3, 0, 0, 0],
       pillar: [0, 0, 0, 2],
     },
+    themes: { people: [0], solitude: [2] },
   },
   // q23 — Act 3 misdirection via imagePick: the door is pure symbol — iron =
   // protection (sentinel/pillar), glass = curated transparency (mask), ajar =
@@ -542,7 +614,9 @@ export const QUESTIONS = [
     id: 'q23',
     act: 3,
     prompt: 'Pick a door.',
+    faceDown: true,
     interactionType: 'imagePick',
+    difficulty: 'hard',
     options: [
       'A heavy iron door',
       'A glass door — see-through and open',
@@ -559,12 +633,14 @@ export const QUESTIONS = [
       spark: [0, 2, 0, 0],
       pillar: [2, 0, 0, 0],
     },
+    themes: { security: [0], freedom: [1, 2] },
   },
   {
     id: 'q24',
     act: 3,
     prompt: 'A stranger on a train asks what you do. You…',
     interactionType: 'multipleChoice',
+    difficulty: 'easy',
     options: [
       'Tell them the truth, plainly',
       'Tell them something more interesting',
@@ -581,12 +657,14 @@ export const QUESTIONS = [
       spark: [0, 3, 0, 0],
       pillar: [3, 0, 0, 0],
     },
+    themes: { people: [2], solitude: [3] },
   },
   {
     id: 'q25',
     act: 3,
     prompt: 'One word: the last thing you check before you fall asleep.',
     interactionType: 'wordInput',
+    difficulty: 'medium',
     options: [],
     keywords: {
       sentinel: ['door', 'lock', 'alarm', 'windows'],
@@ -607,6 +685,11 @@ export const QUESTIONS = [
       ghost: [0],
       spark: [2],
       pillar: [1],
+    },
+    // The reveal quotes this answer back (P2).
+    revealQuote: {
+      before: 'You check ',
+      after: ' before you sleep. I noticed.',
     },
   },
 ]
