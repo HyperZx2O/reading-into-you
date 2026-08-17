@@ -51,7 +51,7 @@ Play again and you get a fresh, randomly drawn question pool, so no two readings
 Five subject files, randomly selected from a pool of eight — each with a name, a behavioral note, and scene notes from the field.
 
 1. **Study the dossier.** Read the clues. Jane occasionally drops a dry mid-session comment at subjects 3 and 5, based on how sharp your eye has been so far.
-2. **Make your deduction.** Four questions per subject. Every answer is judged on the spot — correct answers get a gold border and Jane's typed confirmation, wrong ones get red and a correction.
+2. **Make your deductions.** Four reads per subject, committed with no verdict — Jane holds her judgement. Answer all four, and she turns the page: correct reads are stamped gold with her typed confirmation, wrong ones stay blank. *"You guessed. I do not guess."*
 3. **Get rated.** At the end, your accuracy becomes a Perception Rating on Jane's own ladder:
 
 | Score | Rating |
