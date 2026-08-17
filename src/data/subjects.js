@@ -13,8 +13,7 @@
  *       prompt: string,
  *       options: string[4],       // always 4 options
  *       correctIndex: number,     // 0-based index of the correct option
- *       correctFeedback: string,  // Jane-style praise on correct answer
- *       wrongFeedback: string,    // Jane-style redirect on wrong answer
+ *       correctFeedback: string,  // Jane's remark — revealed at the batch confirmation
  *     }
  *   ]
  * }
@@ -48,7 +47,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 0,
         correctFeedback: 'The dust says it has been down for a while. People do not hide what they are proud of — they hide what they are not sure about.',
-        wrongFeedback: 'Look closer at where the dust settled. A photo that lives face-down is a photo that is not meant to be seen.',
       },
       {
         id: 's01q2',
@@ -61,7 +59,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'Three refills and not a sip. The refill is a ritual, a hand motion — his mind is nowhere near that mug.',
-        wrongFeedback: 'A man who does not like coffee does not refill it three times. He refills it because his hands need something to do.',
       },
       {
         id: 's01q3',
@@ -74,7 +71,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'Rings move when they come off. Whatever happened recently, it started with him taking that ring off.',
-        wrongFeedback: 'Rings do not drift to the wrong hand on their own. Something was taken off — and put back in a hurry.',
       },
       {
         id: 's01q4',
@@ -87,7 +83,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'He looks at the drawer when he should be looking at you. That is where the answer is hiding.',
-        wrongFeedback: 'Watch what a person looks at when they are not being watched. That drawer is where his attention keeps going.',
       },
     ],
   },
@@ -115,7 +110,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'The one unpicked finger is the tell. The rest is armor; that thumb is where the nerves leak out.',
-        wrongFeedback: 'Perfection is a performance, and performances have seams. The raw cuticle is the seam.',
       },
       {
         id: 's02q2',
@@ -128,7 +122,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'She is not polite. She is pre-paying for goodwill — she wants something and she is stacking favors before asking.',
-        wrongFeedback: 'Thanking you for nothing is not politeness. It is currency, spent before the deal.',
       },
       {
         id: 's02q3',
@@ -141,7 +134,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'A real memory holds still. The changing details are not lies about events — they are lies about who she wants to be in the story.',
-        wrongFeedback: 'Memory does not rewrite a restaurant twice in one hour. That is a story being edited live, for you.',
       },
       {
         id: 's02q4',
@@ -154,7 +146,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'She watches the room before she commits. The lag is a second of reading the crowd — she performs to the audience, not to the joke.',
-        wrongFeedback: 'Genuine laughter does not wait for permission. Hers does — she is reading the room before joining it.',
       },
     ],
   },
@@ -182,7 +173,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 2,
         correctFeedback: 'Calluses fade with desk jobs. His are old — the hands remember work he no longer does.',
-        wrongFeedback: 'Fresh calluses would match his current life. Old ones mean the work is behind him, but the hands have not forgotten.',
       },
       {
         id: 's03q2',
@@ -195,7 +185,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'A flinch like that is older than the moment. His body heard a sound it has been trained to fear.',
-        wrongFeedback: 'That is not the flinch of a nervous man. That is the flinch of a man whose body knows what that sound used to mean.',
       },
       {
         id: 's03q3',
@@ -208,7 +197,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 2,
         correctFeedback: 'Wall at his back, room in front. That is a man who has learned to watch the doors — a habit carved by experience.',
-        wrongFeedback: 'He is not choosing the view. He is choosing the exits — a habit people do not pick up in comfortable rooms.',
       },
       {
         id: 's03q4',
@@ -221,7 +209,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 0,
         correctFeedback: 'He wears it for himself, not for you. Proud of the fact, uncomfortable with the questions — so he lets it speak silently.',
-        wrongFeedback: 'A man who wants to talk about it mentions it. A man who just wants to carry it wears it quietly.',
       },
     ],
   },
@@ -248,7 +235,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'The fast talker who stops mid-stream — that is not a pause, that is a door closing. She does not go silent on things that do not matter.',
-        wrongFeedback: 'Chatter is her default. The only silence in the whole conversation is where the wound is.',
       },
       {
         id: 's04q2',
@@ -261,7 +247,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'We keep the places that matter close, even on our screens. A city you do not recognize is a city she carries with her.',
-        wrongFeedback: 'People keep photos of what they want to return to. That city is not decoration — it is a place she left.',
       },
       {
         id: 's04q3',
@@ -274,7 +259,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'New machine, old identity. She moved on from the company but not from being that person — the stickers are the bridge she keeps.',
-        wrongFeedback: 'Stickers are cheap to replace. Keeping the faded ones means she is not ready to let that identity go.',
       },
       {
         id: 's04q4',
@@ -287,7 +271,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'She mentions her constantly because the mention does the work. A real, present relationship does not need to be performed.',
-        wrongFeedback: 'The sister is a useful character in Priya\'s story — mentioned often, never produced. Notice who appears in stories but never in rooms.',
       },
     ],
   },
@@ -315,7 +298,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'The denial is the tell. People who really do not try do not announce it — they just do not do the thing.',
-        wrongFeedback: 'Announcing your effortlessness is effort. It is the one performance he cannot stop rehearsing.',
       },
       {
         id: 's05q2',
@@ -328,7 +310,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'The same mess, three times. That is not chaos — that is a hairstyle. It takes more work than clean hair.',
-        wrongFeedback: 'Real mess varies. Repeatable mess is a product — and products take effort.',
       },
       {
         id: 's05q3',
@@ -341,7 +322,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'A discreet check happens fast. A slow reveal is not a check — it is a display. He is showing you the watch, not reading it.',
-        wrongFeedback: 'When a man slowly reveals an expensive watch, he is not telling the time. He is telling you what he wants you to think of him.',
       },
       {
         id: 's05q4',
@@ -354,7 +334,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'He is not laughing at the joke. He is previewing the laugh he wants from you — a man fishing for your reaction.',
-        wrongFeedback: 'Laughing before the punchline means the laugh is not about the joke. It is an invitation — he needs you to join in.',
       },
     ],
   },
@@ -382,7 +361,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'Food is the currency of her care. She is not feeding people — she is making herself indispensable, one meal at a time.',
-        wrongFeedback: 'The food is not about hunger. It is about the debt — she wants people to need her in a way that can be measured.',
       },
       {
         id: 's06q2',
@@ -395,7 +373,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'If the goal were the solution, she would celebrate. The drop says the goal was being needed — and that person just stopped needing her.',
-        wrongFeedback: 'Watch the face when the need disappears. That is where you see what the helping was actually for.',
       },
       {
         id: 's06q3',
@@ -408,7 +385,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'No one needs a receipt to know they fed someone. Keeping them means the giving is being tallied — she is keeping score.',
-        wrongFeedback: 'Receipts are for the IRS, or for the scoreboard. Hers are a ledger of what she has given — and what she is owed.',
       },
       {
         id: 's06q4',
@@ -421,7 +397,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'She does not want thanks. She wants the next request — being needed is the only role that feels safe to her.',
-        wrongFeedback: 'Watch what she does when the helping is over. She lingers, looking for the next thing to do — because the role is the reward.',
       },
     ],
   },
@@ -449,7 +424,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'The false starts are a confession trying to escape. He wants to tell you, and he keeps changing his mind mid-sentence.',
-        wrongFeedback: 'A man who keeps starting sentences he does not finish is not searching for words. He is searching for courage.',
       },
       {
         id: 's07q2',
@@ -462,7 +436,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 0,
         correctFeedback: 'He rehearsed his confession. The notecard is the script for the hard thing — people only script what they fear messing up.',
-        wrongFeedback: 'Nobody scripts a casual chat. Scripting means he knew exactly what he wanted to say and is still afraid to say it.',
       },
       {
         id: 's07q3',
@@ -475,7 +448,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'Hypotheticals are the safest room to confess in. He is asking you how you will react before he tells you the truth.',
-        wrongFeedback: 'A man who frames a confession as a hypothetical is shopping for your reaction. He wants to know if the truth is safe to tell.',
       },
       {
         id: 's07q4',
@@ -488,7 +460,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'He is not admiring himself. He is bracing — checking that the mask is still on before he takes it off.',
-        wrongFeedback: 'Before a hard confession, people reach for something solid. His mirror is his anchor — a last check that he is still himself.',
       },
     ],
   },
@@ -516,7 +487,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'The empty chair is not forgetfulness. It is a kept promise — the seat stays ready because closing it would mean accepting the loss.',
-        wrongFeedback: 'She knows they will not come. The setting is not hope — it is a ritual of keeping someone present.',
       },
       {
         id: 's08q2',
@@ -529,7 +499,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'One photo in one room is a memory. The same photo everywhere is a refusal to let him leave a single room of her life.',
-        wrongFeedback: 'You do not need three copies to remember a face. Three rooms, same frame, same angle — that is grief doing the decorating.',
       },
       {
         id: 's08q3',
@@ -542,7 +511,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'Some dates need circling and never need naming. The circle is the memory; the blank space is the grief.',
-        wrongFeedback: 'A circled date with no words is not forgetfulness. It is a date too heavy to label.',
       },
       {
         id: 's08q4',
@@ -555,7 +523,6 @@ export const SUBJECTS = [
         ],
         correctIndex: 1,
         correctFeedback: 'Her grief is furniture now — moving it would mean moving on, and she is not ready to live in a house without him.',
-        wrongFeedback: 'She keeps him present not because she is lonely, but because letting go feels like a second loss.',
       },
     ],
   },
