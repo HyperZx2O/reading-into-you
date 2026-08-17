@@ -1,0 +1,220 @@
+/* ProgressTracker — progression metrics display */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  width: 100%;
+  padding: var(--spacing-xl) var(--spacing-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-card);
+  animation: cardUp 600ms ease both;
+}
+
+@keyframes cardUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-card);
+}
+
+.emptyText {
+  font-family: var(--font-reveal);
+  font-size: 0.9rem;
+  color: var(--color-muted);
+  text-align: center;
+  margin: 0;
+}
+
+.header {
+  text-align: center;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  color: var(--color-gold);
+  margin: 0;
+}
+
+.subtitle {
+  font-family: var(--font-reveal);
+  font-size: 0.9rem;
+  color: var(--color-muted);
+  margin: var(--spacing-sm) 0 0;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+}
+
+.statCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+}
+
+.statValue {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  color: var(--color-gold);
+}
+
+.statLabel {
+  font-family: var(--font-reveal);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.archetypeSection,
+.historySection {
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border);
+}
+
+.sectionTitle {
+  font-family: var(--font-reveal);
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin: 0 0 var(--spacing-md);
+}
+
+.archetypeGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.archetypeItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.archetypeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.archetypeName {
+  font-family: var(--font-reveal);
+  font-size: 0.85rem;
+  color: var(--color-text);
+  text-transform: capitalize;
+}
+
+.archetypeCount {
+  font-family: var(--font-reveal);
+  font-size: 0.8rem;
+  color: var(--color-gold);
+}
+
+.progressBar {
+  height: 4px;
+  background: var(--color-border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--color-gold);
+  transition: width 300ms ease;
+}
+
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.historyItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+}
+
+.historyMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.historyArchetype {
+  font-family: var(--font-reveal);
+  font-size: 0.85rem;
+  color: var(--color-text);
+  text-transform: capitalize;
+}
+
+.historyMode {
+  font-family: var(--font-reveal);
+  font-size: 0.7rem;
+  color: var(--color-muted);
+  text-transform: uppercase;
+}
+
+.historyDetails {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.historyDate {
+  font-family: var(--font-reveal);
+  font-size: 0.75rem;
+  color: var(--color-muted);
+}
+
+.historyDuration {
+  font-family: var(--font-reveal);
+  font-size: 0.75rem;
+  color: var(--color-gold);
+}
+
+/* Responsive: stack stats on mobile */
+@media (max-width: 480px) {
+  .statsGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-sm);
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .container {
+    animation: none;
+  }
+}
