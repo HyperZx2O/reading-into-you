@@ -7,22 +7,31 @@
   justify-content: center;
   gap: var(--spacing-xl);
   padding: var(--spacing-lg);
-  animation: screenIn 400ms ease both;
+  animation: pageTurn 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes screenIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .title {
   font-family: var(--font-heading);
   font-size: clamp(2rem, 5vw, 3rem);
   text-align: center;
+  color: var(--color-gold);
+  animation: titleSettle 600ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both, goldPulse 3s ease-in-out 700ms infinite;
+}
+
+@keyframes titleSettle {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .modes {
@@ -33,6 +42,7 @@
   max-width: 44rem;
 }
 
+/* ── Sheet stack ─────────────────────────────────────────── */
 /* A stack of sheets — the file beneath the file. Flat, border-defined. */
 .modeStack {
   position: relative;
@@ -41,21 +51,25 @@
 
 .sheet {
   --offset: 8px;
-  --sheet-opacity: 0.3;
+  --sheet-opacity: 0.4;
   position: absolute;
   inset: 0;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-card);
-  opacity: var(--sheet-opacity);
-  transform: translate(var(--offset), var(--offset));
-  /* The stack is set down on the desk: sheets slide into their offsets. */
+  opacity: 0;
+  transform: translate(var(--offset), var(--offset)) rotate(0deg);
   animation: sheetSettle 400ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.sheet:nth-child(1) {
+  transform: translate(var(--offset), var(--offset)) rotate(-0.5deg);
 }
 
 .sheet:nth-child(2) {
   --offset: 4px;
-  --sheet-opacity: 0.55;
+  --sheet-opacity: 0.65;
+  transform: translate(var(--offset), var(--offset)) rotate(0.3deg);
   animation-delay: 80ms;
 }
 
@@ -65,28 +79,36 @@
     transform: translate(
       calc(var(--offset) + 20px),
       calc(var(--offset) + 20px)
-    );
+    ) rotate(0deg);
   }
   to {
     opacity: var(--sheet-opacity);
-    transform: translate(var(--offset), var(--offset));
+    transform: translate(var(--offset), var(--offset)) rotate(0deg);
   }
 }
 
+/* ── Mode card ───────────────────────────────────────────── */
 .mode {
   position: relative;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
   padding: var(--spacing-lg) var(--spacing-md);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-card);
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast);
   /* The file settles on top after its sheets land. */
-  animation: fileSet 450ms cubic-bezier(0.16, 1, 0.3, 1) 160ms both;
+  animation: fileSet 450ms cubic-bezier(0.16, 1, 0.3, 1) 160ms both, borderBreathe 4s ease-in-out 2s infinite;
+}
+
+.mode:hover {
+  border-color: var(--color-gold);
+  background: color-mix(in srgb, var(--color-gold) 4%, var(--color-card));
 }
 
 @keyframes fileSet {
@@ -100,6 +122,28 @@
   }
 }
 
+/* ── Glyph (visual identifier) ───────────────────────────── */
+.glyph {
+  font-family: var(--font-reveal);
+  font-size: 1.4rem;
+  color: var(--color-gold);
+  opacity: 0.7;
+  line-height: 1;
+  animation: glyphReveal 500ms cubic-bezier(0.16, 1, 0.3, 1) 300ms both, typewriterJitter 0.15s steps(1) 800ms infinite;
+}
+
+@keyframes glyphReveal {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+}
+
+/* ── Reference number ────────────────────────────────────── */
 .reference {
   font-family: var(--font-reveal);
   font-size: 0.75rem;
@@ -107,18 +151,55 @@
   text-transform: uppercase;
   color: var(--color-gold);
   text-align: center;
+  animation: refFade 400ms ease 200ms both, typewriterJitter 0.15s steps(1) 600ms infinite;
 }
 
+@keyframes refFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ── Mode name (now a heading) ───────────────────────────── */
+.modeName {
+  font-family: var(--font-heading);
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
+  font-weight: 700;
+  color: var(--color-text);
+  text-align: center;
+  overflow-wrap: break-word;
+  margin: 0;
+  animation: nameSlide 500ms cubic-bezier(0.16, 1, 0.3, 1) 250ms both;
+}
+
+@keyframes nameSlide {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Tagline ─────────────────────────────────────────────── */
 .tagline {
   font-family: var(--font-reveal);
   font-size: 0.9rem;
   color: var(--color-muted);
   text-align: center;
   overflow-wrap: break-word;
+  animation: tagFade 400ms ease 350ms both, typewriterJitter 0.15s steps(1) 750ms infinite;
 }
 
+@keyframes tagFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ── Duration ────────────────────────────────────────────── */
 /* The file's estimated-time annotation — honest commitment, dossier style.
- * opacity 0.85 keeps it subdued while clearing WCAG AA (≈4.8:1) for 12px text. */
+ * Thin gold top border separates it from the tagline. */
 .duration {
   font-family: var(--font-reveal);
   font-size: 0.75rem;
@@ -128,20 +209,46 @@
   opacity: 0.85;
   text-align: center;
   overflow-wrap: break-word;
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid color-mix(in srgb, var(--color-gold) 20%, transparent);
+  width: 100%;
+  animation: durFade 400ms ease 400ms both, typewriterJitter 0.15s steps(1) 800ms infinite;
 }
 
+@keyframes durFade {
+  from { opacity: 0; }
+  to { opacity: 0.85; }
+}
+
+/* ── Button ──────────────────────────────────────────────── */
 .modeButton {
   width: 100%;
-  padding: var(--spacing-lg);
+  margin-top: auto;
+  padding: 0.75rem var(--spacing-lg);
   border: 1px solid var(--color-gold);
   border-radius: var(--radius-md);
   background: transparent;
   color: var(--color-text);
   font-family: var(--font-heading);
-  font-size: clamp(1.3rem, 3vw, 1.8rem);
+  font-size: clamp(1rem, 2vw, 1.2rem);
   font-weight: 700;
   overflow-wrap: break-word;
-  transition: background var(--transition-fast), border-color var(--transition-fast);
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    transform 150ms ease;
+  animation: btnRise 400ms cubic-bezier(0.16, 1, 0.3, 1) 450ms both;
+}
+
+@keyframes btnRise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .modeButton:hover {
@@ -149,6 +256,30 @@
   border-color: var(--color-gold);
 }
 
+.modeButton:active {
+  transform: scaleY(0.97);
+}
+
+/* ── Stats link ──────────────────────────────────────────── */
+.statsLink {
+  display: block;
+  margin-top: var(--spacing-lg);
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: none;
+  color: var(--color-muted);
+  font-family: var(--font-reveal);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.statsLink:hover {
+  color: var(--color-gold);
+}
+
+/* ── Mobile ──────────────────────────────────────────────── */
 @media (max-width: 480px) {
   .modes {
     flex-direction: column;
@@ -159,7 +290,7 @@
   }
 
   .modeButton {
-    padding: var(--spacing-lg) var(--spacing-md);
+    padding: 0.75rem var(--spacing-md);
   }
 
   .sheet:nth-child(1) {
@@ -171,7 +302,7 @@
   }
 }
 
-/* ── Short viewports (phone landscape) ──────────────────────── */
+/* ── Short viewports (phone landscape) ───────────────────── */
 @media (max-height: 500px) {
   .screen {
     gap: var(--spacing-lg);
@@ -193,7 +324,25 @@
 
 /* Touch: no sticky hover tint after a tap. */
 @media (hover: none) {
+  .mode:hover {
+    border-color: var(--color-border);
+    background: var(--color-card);
+  }
+
   .modeButton:hover {
     background: transparent;
+  }
+}
+
+/* Reduced motion: no typewriter jitter, no gold pulse, no border breath, no page turn */
+@media (prefers-reduced-motion: reduce) {
+  .screen,
+  .reference,
+  .tagline,
+  .duration,
+  .glyph,
+  .title,
+  .mode {
+    animation: none;
   }
 }

@@ -115,11 +115,13 @@ export default function Intro({ onComplete }) {
           <h1 className={styles.letterhead}>Reading Into You</h1>
           <div className={styles.rule} aria-hidden="true" />
         </header>
-        <p className={styles.script}>
-          {shown}
-          {!isDone && !reduceMotion && (
-            <span className={styles.caret} aria-hidden="true" />
-          )}
+        <p className={styles.script} aria-label={INTRO_LINES.join('. ')}>
+          <span aria-hidden="true">
+            {shown}
+            {!isDone && !reduceMotion && (
+              <span className={styles.caret} />
+            )}
+          </span>
         </p>
         <div
           className={`${styles.rule} ${styles.seal}${

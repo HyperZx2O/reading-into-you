@@ -8,12 +8,17 @@ import styles from '../../styles/ModeSelect.module.css'
  * the note Jane files under it, and the action that opens it.
  * Choosing a mode begins a session, so the click plays `start` (a process
  * or session begins) — the only cue on this screen.
- * @param {{ onSelectMode: (mode: 'mode1' | 'mode2') => void }} props
+ * @param {{ onSelectMode: (mode: 'mode1' | 'mode2') => void, onStats?: () => void }} props
  */
-export default function ModeSelect({ onSelectMode }) {
+export default function ModeSelect({ onSelectMode, onStats }) {
   const chooseMode = (mode) => {
     playSfx('start')
     onSelectMode(mode)
+  }
+
+  const handleStats = () => {
+    playSfx('click')
+    if (onStats) onStats()
   }
 
   return (
@@ -24,7 +29,9 @@ export default function ModeSelect({ onSelectMode }) {
           <span className={styles.sheet} aria-hidden="true" />
           <span className={styles.sheet} aria-hidden="true" />
           <div className={styles.mode}>
+            <span className={styles.glyph} aria-hidden="true">✦</span>
             <p className={styles.reference}>Case File N° 01</p>
+            <h2 className={styles.modeName}>{MODE_SELECT_COPY.mode1Name}</h2>
             <p className={styles.tagline}>{MODE_SELECT_COPY.mode1Tagline}</p>
             <p className={styles.duration}>{MODE_SELECT_COPY.mode1Duration}</p>
             <button
@@ -32,7 +39,7 @@ export default function ModeSelect({ onSelectMode }) {
               className={styles.modeButton}
               onClick={() => chooseMode('mode1')}
             >
-              {MODE_SELECT_COPY.mode1Name}
+              Open file →
             </button>
           </div>
         </section>
@@ -40,7 +47,9 @@ export default function ModeSelect({ onSelectMode }) {
           <span className={styles.sheet} aria-hidden="true" />
           <span className={styles.sheet} aria-hidden="true" />
           <div className={styles.mode}>
+            <span className={styles.glyph} aria-hidden="true">◉</span>
             <p className={styles.reference}>Case File N° 02</p>
+            <h2 className={styles.modeName}>{MODE_SELECT_COPY.mode2Name}</h2>
             <p className={styles.tagline}>{MODE_SELECT_COPY.mode2Tagline}</p>
             <p className={styles.duration}>{MODE_SELECT_COPY.mode2Duration}</p>
             <button
@@ -48,11 +57,20 @@ export default function ModeSelect({ onSelectMode }) {
               className={styles.modeButton}
               onClick={() => chooseMode('mode2')}
             >
-              {MODE_SELECT_COPY.mode2Name}
+              Open file →
             </button>
           </div>
         </section>
       </div>
+      {onStats && (
+        <button
+          type="button"
+          className={styles.statsLink}
+          onClick={handleStats}
+        >
+          View Statistics →
+        </button>
+      )}
     </main>
   )
 }
