@@ -2,8 +2,10 @@ import { act, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 const sfx = vi.hoisted(() => ({ playSfx: vi.fn() }))
+const memory = vi.hoisted(() => ({ getPlayerName: vi.fn(() => 'Test'), setPlayerName: vi.fn(), recordSession: vi.fn() }))
 
 vi.mock('../../audio/uiSfx.js', () => sfx)
+vi.mock('../../utils/caseMemory.js', () => memory)
 vi.mock('../../hooks/useTypewriter.js', () => ({
   default: () => ({ displayedText: 'typed', isDone: true, skip: vi.fn() }),
 }))

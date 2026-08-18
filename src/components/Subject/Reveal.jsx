@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import { getArchetypeById } from '../../data/archetypes.js'
 import { pickWordQuote } from '../../utils/scoring.js'
-import { recordSession } from '../../utils/caseMemory.js'
+import { recordSession, getPlayerName, setPlayerName } from '../../utils/caseMemory.js'
 import useTypewriter from '../../hooks/useTypewriter.js'
 import { playSfx } from '../../audio/uiSfx.js'
 import styles from '../../styles/Reveal.module.css'
@@ -17,7 +17,7 @@ function formatWordAnswer(text) {
   const trimmed = String(text).trim()
   if (!trimmed) return null
   const capped =
-    trimmed.length > 48 ? `${trimmed.slice(0, 48).trimEnd()}…` : trimmed
+    trimmed.length > 48 ? `${trimmed.slice(0, 48).trimEnd()}\u2026` : trimmed
   return capped.charAt(0).toUpperCase() + capped.slice(1)
 }
 
@@ -36,7 +36,10 @@ export default function Reveal({ archetype, questions = [], answers = [], onRepl
   const [showShadow, setShowShadow] = useState(false)
   const [envelopeOpen, setEnvelopeOpen] = useState(false)
   const [showResultCard, setShowResultCard] = useState(false)
+  const [playerName, setPlayerNameState] = useState(() => getPlayerName())
+  const [nameInput, setNameInput] = useState('')
   const titleRef = useRef(null)
+  const nameInputRef = useRef(null)
   const sessionStartRef = useRef(Date.now())
   const { displayedText, isDone, skip } = useTypewriter(
     beat === 2 ? archetype.monologue[line] : '',
@@ -51,6 +54,13 @@ export default function Reveal({ archetype, questions = [], answers = [], onRepl
   )
   // Sound guard — the Case Closed stamp fires exactly once per playthrough.
   const beat3Sounded = useRef(false)
+
+  // Focus the name input when it appears
+  useEffect(() => {
+    if (beat === 3 && !playerName) {
+      window.setTimeout(() => nameInputRef.current?.focus(), 100)
+    }
+  }, [beat, playerName])
 
   // The envelope is the first click: opening it reveals the name (level-up),
   // then focus lands on the verdict once the flap has lifted. There is no
@@ -99,6 +109,15 @@ export default function Reveal({ archetype, questions = [], answers = [], onRepl
     } else {
       setBeat(3)
     }
+  }
+
+  const handleNameSubmit = (e) => {
+    e.preventDefault()
+    const trimmed = nameInput.trim()
+    if (!trimmed) return
+    setPlayerName(trimmed)
+    setPlayerNameState(trimmed)
+    playSfx('select')
   }
 
   const shadow = getArchetypeById(archetype.shadowArchetypeId)
@@ -183,9 +202,37 @@ export default function Reveal({ archetype, questions = [], answers = [], onRepl
               advance()
             }}
           >
-            Continue →
+            Continue \u2192
           </button>
         )}
+      </main>
+    )
+  }
+
+  // Beat 3: name prompt if no name saved yet, then the How Jane Knew card.
+  if (!playerName) {
+    return (
+      <main key={beat} className={styles.screen}>
+        <section className={styles.card}>
+          <span className={styles.stamp} aria-hidden="true">
+            Case Closed
+          </span>
+          <h2 className={styles.cardTitle}>Jane needs a name for the file.</h2>
+          <form onSubmit={handleNameSubmit} className={styles.nameForm}>
+            <input
+              ref={nameInputRef}
+              type="text"
+              className={styles.nameInput}
+              placeholder="Your name"
+              maxLength={40}
+              value={nameInput}
+              onChange={(e) => setNameInput(e.target.value)}
+            />
+            <button type="submit" className={styles.continue}>
+              File the case \u2192
+            </button>
+          </form>
+        </section>
       </main>
     )
   }
@@ -248,6 +295,7 @@ export default function Reveal({ archetype, questions = [], answers = [], onRepl
           <ResultCard
             archetype={archetype}
             duration={Math.round((Date.now() - sessionStartRef.current) / 1000)}
+            playerName={playerName}
             onChallenge={handleChallenge}
           />
         )}

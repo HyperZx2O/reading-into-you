@@ -7,7 +7,7 @@ const sfx = vi.hoisted(() => ({
   TYPING_VOLUME: 0.05,
 }))
 
-const memory = vi.hoisted(() => ({ rememberArchetype: vi.fn(), updatePerformanceMetrics: vi.fn() }))
+const memory = vi.hoisted(() => ({ rememberArchetype: vi.fn(), updatePerformanceMetrics: vi.fn(), getPlayerName: vi.fn(() => 'Test'), setPlayerName: vi.fn() }))
 
 vi.mock('../../audio/uiSfx.js', () => sfx)
 vi.mock('../../utils/caseMemory.js', () => memory)

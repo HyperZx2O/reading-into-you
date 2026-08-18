@@ -57,6 +57,15 @@
   }
 }
 
+.subjectLine {
+  font-family: var(--font-reveal);
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin: 0 0 var(--spacing-sm);
+}
+
 .title {
   font-family: var(--font-heading);
   font-size: clamp(1.5rem, 4vw, 2rem);
@@ -108,7 +117,8 @@
 }
 
 .copyButton,
-.challengeButton {
+.challengeButton,
+.downloadButton {
   padding: 0.75rem 1.5rem;
   border: 1px solid var(--color-gold);
   border-radius: var(--radius-sm);
@@ -122,8 +132,14 @@
 }
 
 .copyButton:hover,
-.challengeButton:hover {
+.challengeButton:hover,
+.downloadButton:hover {
   background: color-mix(in srgb, var(--color-gold) 12%, transparent);
+}
+
+.downloadButton:disabled {
+  opacity: 0.5;
+  cursor: default;
 }
 
 .challengeButton {
@@ -146,7 +162,8 @@
 /* Touch: no sticky hover tint after a tap. */
 @media (hover: none) {
   .copyButton:hover,
-  .challengeButton:hover {
+  .challengeButton:hover,
+  .downloadButton:hover {
     background: transparent;
   }
 

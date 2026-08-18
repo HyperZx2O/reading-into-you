@@ -5,7 +5,7 @@ import styles from '../../styles/Reveal.module.css'
 import viewStyles from '../../styles/ViewResult.module.css'
 
 export default function ViewResult({ onPlay }) {
-  const { archetype: archetypeId } = readUrlParams()
+  const { archetype: archetypeId, name } = readUrlParams()
   const archetype = archetypeId ? getArchetypeById(archetypeId) : null
 
   if (!archetype) {
@@ -39,6 +39,9 @@ export default function ViewResult({ onPlay }) {
         <span className={styles.stamp} aria-hidden="true">
           Case Closed
         </span>
+        {name && (
+          <p className={viewStyles.subjectLine}>Subject: {name}</p>
+        )}
         <h1 className={styles.cardTitle}>{archetype.name}</h1>
         <p className={viewStyles.profile}>{archetype.oceanProfile}</p>
         <p className={viewStyles.type}>{archetype.jungianType}</p>

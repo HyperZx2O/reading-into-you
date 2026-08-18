@@ -21,9 +21,10 @@ export function readUrlParams() {
       archetype: params.get('archetype'),
       ref: params.get('ref'),
       session: params.get('session'),
+      name: params.get('name'),
     }
   } catch {
-    return { role: null, archetype: null, ref: null, session: null }
+    return { role: null, archetype: null, ref: null, session: null, name: null }
   }
 }
 
@@ -67,13 +68,15 @@ export function generateChallengeUrl(userId) {
  * Generate a result sharing URL.
  * @param {string} archetypeId - The resolved archetype
  * @param {string} userId - The player's user ID
+ * @param {string} [playerName] - Optional player name
  * @returns {string} The shareable result URL
  */
-export function generateResultUrl(archetypeId, userId) {
+export function generateResultUrl(archetypeId, userId, playerName) {
   try {
     const url = new URL(window.location.href)
     url.searchParams.set('archetype', archetypeId)
     url.searchParams.set('session', userId)
+    if (playerName) url.searchParams.set('name', playerName)
     return url.toString()
   } catch {
     return window.location.href
@@ -84,5 +87,5 @@ export function generateResultUrl(archetypeId, userId) {
  * Clear all game-related URL parameters.
  */
 export function clearUrlParams() {
-  setUrlParams({ role: null, archetype: null, ref: null, session: null })
+  setUrlParams({ role: null, archetype: null, ref: null, session: null, name: null })
 }

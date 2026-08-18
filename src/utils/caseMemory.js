@@ -21,6 +21,7 @@ const USER_ID_KEY = 'jane_user_id'
 const REFERRAL_KEY = 'jane_referral_count'
 const INTRO_KEY = 'jane_intro_seen'
 const SOUND_KEY = 'jane_sound_enabled'
+const PLAYER_NAME_KEY = 'jane_player_name'
 
 const MAX_SCORE_ENTRIES = 3
 const MAX_HISTORY_ENTRIES = 50
@@ -309,6 +310,26 @@ export function isSoundEnabled() {
 export function setSoundEnabled(enabled) {
   try {
     localStorage.setItem(SOUND_KEY, String(enabled))
+  } catch {
+    // silent
+  }
+}
+
+// ── Player Name ──────────────────────────────────────────────────────
+
+/** Get the stored player name, or null. Never throws. */
+export function getPlayerName() {
+  try {
+    return localStorage.getItem(PLAYER_NAME_KEY) || null
+  } catch {
+    return null
+  }
+}
+
+/** Save the player name. */
+export function setPlayerName(name) {
+  try {
+    localStorage.setItem(PLAYER_NAME_KEY, String(name).trim())
   } catch {
     // silent
   }
