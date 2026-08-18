@@ -9,6 +9,7 @@ import ModeSelect from './components/ModeSelect/ModeSelect.jsx'
 import SubjectGame from './components/Subject/SubjectGame.jsx'
 import StatsPage from './components/Stats/StatsPage.jsx'
 import EmbedWidget from './components/Results/EmbedWidget.jsx'
+import ViewResult from './components/Results/ViewResult.jsx'
 import { readUrlParams, clearUrlParams } from './utils/urlParams.js'
 import { incrementReferral, getUserId } from './utils/caseMemory.js'
 
@@ -19,6 +20,7 @@ import { incrementReferral, getUserId } from './utils/caseMemory.js'
  *  'mode1'       — The Subject (Mode 1 game flow, includes the reveal)
  *  'mode2'       — The Observer (Mode 2 game flow, Person B's screen)
  *  'mode2Rating' — Perception Rating screen (Person B's screen)
+ *  'viewResult'  — shared result card from a link (archetype param)
  */
 
 const STORAGE_KEY_INTRO = 'jane_intro_seen'
@@ -34,6 +36,11 @@ function getInitialScreen() {
       incrementReferral()
     }
     return 'mode2'
+  }
+
+  // If archetype is set, show the shared result view
+  if (urlParams.archetype) {
+    return 'viewResult'
   }
 
   // Normal flow: check if intro has been seen
@@ -131,6 +138,9 @@ export default function App() {
         )}
         {screen === 'embed' && (
           <EmbedWidget archetype="sentinel" onBack={() => goTo('modeSelect')} />
+        )}
+        {screen === 'viewResult' && (
+          <ViewResult onPlay={handlePlayAgain} />
         )}
       </ErrorBoundary>
     </div>
