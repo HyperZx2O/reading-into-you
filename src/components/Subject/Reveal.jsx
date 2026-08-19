@@ -187,7 +187,7 @@ export default function Reveal({ archetype, questions = [], answers = [], onRepl
 
   if (beat === 2) {
     return (
-      <main key={beat} className={styles.screen} onClick={advance}>
+      <main key={beat} className={styles.screen}>
         <h1 className="sr-only">{archetype.name}</h1>
         {/* key={line}: each new line strikes the paper as a fresh sheet (B3). */}
         <p key={line} className={styles.monologue}>
@@ -197,10 +197,7 @@ export default function Reveal({ archetype, questions = [], answers = [], onRepl
           <button
             type="button"
             className={styles.continue}
-            onClick={(event) => {
-              event.stopPropagation()
-              advance()
-            }}
+            onClick={advance}
           >
             Continue →
           </button>

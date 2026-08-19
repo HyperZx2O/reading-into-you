@@ -22,7 +22,7 @@ const reachCard = () => {
   fireEvent.click(screen.getByRole('button', { name: 'Open the envelope' }))
   fireEvent.click(screen.getByRole('main')) // beat 1 -> 2
   for (let i = 0; i < OUTLAW.monologue.length; i += 1) {
-    fireEvent.click(screen.getByRole('main'))
+    fireEvent.click(screen.getByRole('button', { name: /Continue/ }))
   }
 }
 
