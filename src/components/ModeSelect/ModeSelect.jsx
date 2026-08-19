@@ -67,24 +67,26 @@ export default function ModeSelect({ onSelectMode, onStats, onIntro }) {
           </div>
         </section>
       </div>
-      {onStats && (
-        <button
-          type="button"
-          className={styles.statsLink}
-          onClick={handleStats}
-        >
-          View Statistics →
-        </button>
-      )}
-      {onIntro && (
-        <button
-          type="button"
-          className={styles.statsLink}
-          onClick={handleIntro}
-        >
-          Replay intro →
-        </button>
-      )}
+      <div className={styles.footerLinks}>
+        {onStats && (
+          <button
+            type="button"
+            className={styles.statsLink}
+            onClick={handleStats}
+          >
+            View Statistics →
+          </button>
+        )}
+        {onIntro && (
+          <button
+            type="button"
+            className={styles.statsLink}
+            onClick={handleIntro}
+          >
+            Replay intro →
+          </button>
+        )}
+      </div>
     </main>
   )
 }

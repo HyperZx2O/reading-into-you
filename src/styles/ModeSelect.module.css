@@ -261,6 +261,12 @@
 }
 
 /* ── Stats link ──────────────────────────────────────────── */
+.footerLinks {
+  display: flex;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+}
+
 .statsLink {
   display: block;
   margin-top: var(--spacing-lg);
