@@ -202,7 +202,7 @@ export default function Reveal({ archetype, questions = [], answers = [], onRepl
               advance()
             }}
           >
-            Continue \u2192
+            Continue →
           </button>
         )}
       </main>
@@ -229,7 +229,7 @@ export default function Reveal({ archetype, questions = [], answers = [], onRepl
               onChange={(e) => setNameInput(e.target.value)}
             />
             <button type="submit" className={styles.continue}>
-              File the case \u2192
+              File the case →
             </button>
           </form>
         </section>
