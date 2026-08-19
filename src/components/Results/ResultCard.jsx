@@ -91,26 +91,28 @@ export default function ResultCard({ archetype, duration = 0, playerName = null,
   }
 
   return (
-    <div className={styles.card} ref={cardRef}>
-      <div className={styles.header}>
-        <span className={styles.stamp} aria-hidden="true">
-          Case Closed
-        </span>
-        {playerName && (
-          <p className={styles.subjectLine}>Subject: {playerName}</p>
-        )}
-        <h2 className={styles.title}>{archetype.name}</h2>
-        <p className={styles.profile}>{archetype.oceanProfile}</p>
-      </div>
-
-      <div className={styles.stats}>
-        <div className={styles.stat}>
-          <span className={styles.statLabel}>Time</span>
-          <span className={styles.statValue}>{formatDuration(duration)}</span>
+    <div className={styles.card}>
+      <div ref={cardRef}>
+        <div className={styles.header}>
+          <span className={styles.stamp} aria-hidden="true">
+            Case Closed
+          </span>
+          {playerName && (
+            <p className={styles.subjectLine}>Subject: {playerName}</p>
+          )}
+          <h2 className={styles.title}>{archetype.name}</h2>
+          <p className={styles.profile}>{archetype.oceanProfile}</p>
         </div>
-        <div className={styles.stat}>
-          <span className={styles.statLabel}>Type</span>
-          <span className={styles.statValue}>{archetype.jungianType}</span>
+
+        <div className={styles.stats}>
+          <div className={styles.stat}>
+            <span className={styles.statLabel}>Time</span>
+            <span className={styles.statValue}>{formatDuration(duration)}</span>
+          </div>
+          <div className={styles.stat}>
+            <span className={styles.statLabel}>Type</span>
+            <span className={styles.statValue}>{archetype.jungianType}</span>
+          </div>
         </div>
       </div>
 
