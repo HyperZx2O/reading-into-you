@@ -10,7 +10,7 @@ import styles from '../../styles/ModeSelect.module.css'
  * or session begins) — the only cue on this screen.
  * @param {{ onSelectMode: (mode: 'mode1' | 'mode2') => void, onStats?: () => void }} props
  */
-export default function ModeSelect({ onSelectMode, onStats }) {
+export default function ModeSelect({ onSelectMode, onStats, onIntro }) {
   const chooseMode = (mode) => {
     playSfx('start')
     onSelectMode(mode)
@@ -19,6 +19,11 @@ export default function ModeSelect({ onSelectMode, onStats }) {
   const handleStats = () => {
     playSfx('click')
     if (onStats) onStats()
+  }
+
+  const handleIntro = () => {
+    playSfx('click')
+    if (onIntro) onIntro()
   }
 
   return (
@@ -69,6 +74,15 @@ export default function ModeSelect({ onSelectMode, onStats }) {
           onClick={handleStats}
         >
           View Statistics →
+        </button>
+      )}
+      {onIntro && (
+        <button
+          type="button"
+          className={styles.statsLink}
+          onClick={handleIntro}
+        >
+          Replay intro →
         </button>
       )}
     </main>

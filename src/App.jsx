@@ -78,6 +78,11 @@ export default function App() {
     goTo(mode === 'mode1' ? 'mode1' : 'mode2')
   }, [])
 
+  const handleReplayIntro = useCallback(() => {
+    try { localStorage.removeItem(STORAGE_KEY_INTRO) } catch {}
+    goTo('intro')
+  }, [])
+
   const handleReplay = useCallback(() => goTo('modeSelect'), [])
 
   const handleObserverComplete = useCallback((result) => {
@@ -117,7 +122,7 @@ export default function App() {
           <Intro onComplete={handleIntroComplete} />
         )}
         {screen === 'modeSelect' && (
-          <ModeSelect onSelectMode={handleSelectMode} onStats={() => goTo('stats')} />
+          <ModeSelect onSelectMode={handleSelectMode} onStats={() => goTo('stats')} onIntro={handleReplayIntro} />
         )}
         {screen === 'mode1' && (
           <SubjectGame onReplay={handleReplay} />
